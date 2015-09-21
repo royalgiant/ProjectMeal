@@ -5,7 +5,6 @@ class CreateOrgPeople < ActiveRecord::Migration
     	t.belongs_to :org_company
     	t.string :first_name, null: false
     	t.string :last_name, null: false
-
       	t.timestamps null: false
     end
   end

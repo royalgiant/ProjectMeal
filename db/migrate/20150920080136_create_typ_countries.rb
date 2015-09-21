@@ -5,14 +5,14 @@ class CreateTypCountries < ActiveRecord::Migration
     	t.string :iso3
     	t.string :fips
     	t.string :country
-      	t.string :continent
-      	t.string :currency_code
-      	t.string :currency_name
-      	t.string :phone_prefix
-      	t.string :postal_code
-      	t.string :languages
-      	t.string :geonameid
-      	t.timestamps null: false
+    	t.string :continent
+    	t.string :currency_code
+    	t.string :currency_name
+    	t.string :phone_prefix
+    	t.string :postal_code
+    	t.string :languages
+    	t.string :geonameid
+    	t.timestamps null: false
     end
   end
 end
