@@ -2,7 +2,7 @@
   <div class="navbar-inner">
     <div class="container">
       <div class="navbar-header">
-        <span><%= link_to "MealShelf", root_path, id: "logo"%></span>
+        <span><%= link_to "ProjectMeal", root_path, id: "logo" %></span>
         <span class="beta">Beta</span>
         <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
           <span class="icon-bar"></span>
@@ -12,22 +12,18 @@
       </div>
       <nav class="navbar-collapse bs-navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><%= link_to "Shopping Cart", carts_path %></li>
-        
+          <li><%= link_to "Shopping Cart", "#" %></li>
           <% if signed_in? %>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Account <b class="caret"></b>
-              </a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Account <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
-                <li><%= link_to "Profile", edit_org_person_path(current_org_person) %></li>
+                <li><%= link_to "Profile", "#" %></li>
                 <li class="divider"></li>
-                <li>
-                  <%= link_to "Sign out", destroy_org_person_session_path, method: "delete" %>
-                </li>
+                <li><%= link_to "Sign out", "#", method: "delete" %></li>
               </ul>
             </li>
           <% else %>
-            <li><%= link_to "Sign in", signin_path %></li>
+            <li><%= link_to "Sign in", "#" %></li>
           <% end %>
         </ul>
       </nav>
