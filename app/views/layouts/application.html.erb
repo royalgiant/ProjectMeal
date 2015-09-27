@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ProjectMeal</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <% render 'layouts/shim' %>
 </head>
-<body>
-
-<%= yield %>
-
+<body class="<%= controller_name %> <%= action_name%>">
+	<%= render 'layouts/header' %>
+	<div class="container-fluid">
+		<% flash.each do |key, value| %>
+			<div class="alert alert-<%= key %> col-md-8 col-md-offset-2 main"><%= value %></div>
+		<% end %>
+		<div class="row">
+			<%= yield :sidebar %>
+			<%= yield %>
+		</div>
+	</div>
 </body>
 </html>
