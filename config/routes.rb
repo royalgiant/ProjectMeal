@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  devise_for :org_people, :controllers => { :passwords => "org_people/passwords" , :confirmations => "org_people/confirmations" }
+  devise_scope :org_person do 
+    get 'signup',  to: 'devise/registrations#new'
+    get 'signin',  to: 'devise/sessions#new'
+    delete 'signout', to: 'devise/sessions#destroy'
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
