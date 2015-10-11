@@ -1,0 +1,19 @@
+<% provide(:title, "Recover your password") %>
+<div class="col-md-6 col-md-push-3">
+	<center><h1>Forgot your password?</h1></center>
+	<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+	  <div id="error_explanation" class="col-md-12">
+	  	<%= devise_error_messages! %>
+	  </div>
+	  <div class="col-md-12">
+	  	<div>
+		    <%= f.email_field :email, autofocus: true, placeholder: "Email", :class => "form-control" %>
+		</div>
+
+		<div class="actions shared_links">
+		    <%= f.submit "Send me reset password instructions", class: "btn btn-large btn-primary" %>
+		</div>
+		<%= render "org_people/shared/links" %>
+	  </div>
+	<% end %>	
+</div>

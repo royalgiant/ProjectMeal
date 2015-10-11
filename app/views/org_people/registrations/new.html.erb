@@ -1,0 +1,38 @@
+<div class="col-md-6 col-md-push-3">
+  <%= provide(:title, "Sign Up") %>
+  <center><h1 >Sign Up</h1></center>
+
+  <%= form_for(resource, as: resource_name, url: org_person_registration_path) do |f| %>
+    <div id="error_explanation" class="col-md-12">
+        <%= devise_error_messages! %>
+    </div>
+    <div class="col-md-12">
+      <div class="field">
+        <%= f.text_field :first_name, autofocus: true, placeholder: "First Name", :class => "form-control" %>
+      </div>
+
+      <div class="field">
+        <%= f.text_field :last_name, autofocus: true, placeholder: "Last Name", :class => "form-control" %>
+      </div>
+
+      <div class="field">
+        <%= f.email_field :email, autofocus: true, placeholder: "Email", :class => "form-control" %>
+      </div>
+
+      <div class="field">
+        <%= f.password_field :password, autocomplete: "off", placeholder: "Password", :class => "form-control" %>
+      </div>
+
+      <div class="field">
+        <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: "Password Confirmation", :class => "form-control" %>
+      </div>
+
+      <div class="actions shared_links">
+        <%= f.submit "Sign up", class: "btn btn-large btn-primary" %>
+      </div>
+      <div>
+        <%= render "org_people/shared/links" %>
+      </div>  
+    </div>
+  <% end %>  
+</div>

@@ -1,0 +1,27 @@
+<% provide(:title, "Sign in") %>
+<div class="col-md-6 col-md-push-3">
+  <center><h1>Sign in</h1></center>
+  <%= form_for(resource, as: resource_name, url: org_person_session_path) do |f| %>
+    <div>
+      <%= f.email_field :email, autofocus: true, placeholder: "Email", :class => "form-control" %>
+    </div>
+
+    <div>
+      <%= f.password_field :password, autocomplete: "off", placeholder: "Password", :class => "form-control"  %>
+    </div>
+
+    <% if devise_mapping.rememberable? -%>
+      <div class="signin_remember_me">
+        <%= f.check_box :remember_me %> Remember me
+      </div>
+    <% end -%>
+
+    <div class="actions shared_links">
+      <%= f.submit "Log in", class: "btn btn-large btn-primary" %>
+    </div>
+    <%= render "org_people/shared/links" %>
+  <% end %>
+</div>
+
+
+

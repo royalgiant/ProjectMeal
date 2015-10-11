@@ -1,0 +1,25 @@
+<div class="col-md-6 col-md-push-3">
+  <% provide(:title, "Change your password") %>
+  <center><h1>Change your password</h1></center>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+    <div id="error_explanation" class="col-md-12">
+      <%= devise_error_messages! %>
+    </div>
+    <%= f.hidden_field :reset_password_token %>
+
+    <div class="col-md-12">
+      <div>
+        <%= f.password_field :password, autofocus: true, autocomplete: "off", placeholder: "New Password", :class => "form-control"  %>
+      </div>
+
+      <div>
+        <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirm New Password", :class => "form-control"  %>
+      </div>
+
+      <div class="actions shared_links">
+        <%= f.submit "Change my password", class: "btn btn-large btn-primary" %>
+      </div>
+      <%= render "org_people/shared/links" %>
+    </div>
+  <% end %>
+</div>
