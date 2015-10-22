@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   #   end
 
   resources :catalogues
+  resources :org_people
   root "catalogues#index"
 
   # Example resource route with sub-resources:
