@@ -1,0 +1,33 @@
+<%= f.fields_for :org_contacts do |contact|%>
+  
+  <% if !@contactInfo["avatar"].blank? %>
+    <%= image_tag @contactInfo.avatar_url(:medium).to_s, :class=>"profilePhoto" %>
+  <% end %>
+  <div class="photoPreview">
+    <i class="fa fa-upload photoUpload"></i>
+    <p id="uploadClick">Click to Upload</p>
+  </div>
+    
+  <%= contact.file_field :avatar, accept: 'image/png,image/gif,image/jpeg, image/jpg', id: 'uploadAvatar' %>
+  <p class="deletePhoto">Delete</p>
+
+	<%= contact.text_field :address1, placeholder: "Address 1", :class => "form-control" %>
+	<%= contact.text_field :address2, placeholder: "Address 2", :class => "form-control" %>
+	<%= contact.text_field :city, placeholder: "City", :class => "form-control" %>
+    <%= contact.fields_for :typ_countries do |country|%>
+      <%= country.collection_select :id, TypCountry.order(:country),:id,:country, {prompt: "Please Select Country", selected: @contactInfo["typ_country_id"] }, {:class => "form-control"} %>
+    <% end %>
+    <%= contact.fields_for :typ_regions do |region|%>
+      <%= region.grouped_collection_select :id, TypCountry.order(:country),:typ_region, :country, :id, :name, {prompt: "Please Select Region", selected: @contactInfo["typ_region_id"] }, {:class => "form-control"}%>
+    <% end %>
+    <%= contact.fields_for :org_company do |company|%>
+      <%= company.collection_select :id, OrgCompany.order(:name),:id,:name, {prompt: "Please Select Company", selected: @contactInfo["org_company_id"] }, {:class => "form-control"} %>
+    <% end %>
+	<%= contact.text_field :postal_code, placeholder: "Postal Code", :class => "form-control" %>
+	<%= contact.text_field :email, placeholder: "Email", :class => "form-control", readonly: true %>
+	<%= contact.text_field :business_number, placeholder: "Business Number", :class => "form-control" %>
+	<%= contact.text_field :cell_number, placeholder: "Cell Number", :class => "form-control" %>
+	<%= contact.hidden_field :org_person_id, value: current_org_person.id %>
+<% end %>
+
+
