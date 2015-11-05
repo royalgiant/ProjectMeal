@@ -1,0 +1,15 @@
+<div class="col-md-6 col-md-push-3">
+<%= provide(:title, "Register Company") %>
+<center><h1>Register Your Company</h1></center>
+<%= form_for(@company) do |f| %>
+	<% render 'shared/error_messages' %>
+	<%= f.text_field :name, placeholder: "Company Name", :class => "form-control" %>
+	<%= f.hidden_field :typ_fee_id, value: 1%>
+	<%= f.fields_for :typ_companies do |company| %>
+		<%= company.collection_select :id, TypCompany.order(:name), :id, :name {prompt: "Please Select Company Type", selected: @company["typ_company_id"], {:class => "form-control"}} %>
+	<% end %> 
+	<%= render 'layouts/companyfields', f: f %>
+	<%= f.text_area :description, placeholder: "Description", :class => "form-control" %>
+    <%= f.submit "Register", class: "btn btn-large btn-primary" %>
+<% end %>	
+</div>
