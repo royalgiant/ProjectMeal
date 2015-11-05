@@ -1,0 +1,2 @@
+module OrgCompaniesHelper
+end
