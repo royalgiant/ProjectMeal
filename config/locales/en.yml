@@ -20,4 +20,92 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  errors:
+    format: "%{message}"
+
+  activerecord:
+    errors:
+      models:
+        org_person:
+          attributes:
+            first_name:
+              blank: First Name can't be blank
+            last_name:
+              blank: Last Name can't be blank
+            email:
+              blank: Email can't be blank
+              invalid: Email is invalid
+              taken: Email has already been taken
+            password:
+              blank: Password can't be blank
+              too_short: Password is too short (minimum is 8 characters)
+            password_confirmation:
+              blank: Password confirmation can't be blank
+              confirmation: Password doesn't match confirmation
+        org_credential:
+          attributes:
+            user_name:
+              blank: Email can't be blank
+              invalid: Email is invalid
+              taken: Email has already been taken
+            password:
+              blank: Password can't be blank
+              too_short: Password is too short (minimum is 6 characters)
+            password_confirmation:
+              blank: Password can't be blank
+              confirmation: Password doesn't match confirmation
+        org_contact:
+          attributes:
+            address1:
+              blank: Address 1 can't be blank
+            city:
+              blank: City can't be blank
+            postal_code: 
+              blank: Postal Code can't be blank
+            email:
+              blank: Email can't be blank
+              invalid: Email is invalid
+              taken: Email has already been taken
+            typ_country:
+              blank: Country can't be blank
+            typ_region:
+              blank: Region can't be blank
+            business_number:
+              blank: Business number can't be blank
+              too_short: Business number is too short (minimum is 10 digits)
+              too_long: Business number is too long (maximum is 15 digits)
+              not_a_number: Business number must contain numbers only
+            cell_number:
+              too_short: Cell number is too short (minimum is 10 digits)
+              too_long: Cell number is too long (maximum is 15 digits)
+              not_a_number: Cell number must contain numbers only
+        org_company:
+          attributes:
+            name:
+              blank: Company Name can't be blank
+            typ_company:
+              blank: Company Type can't be blank
+        org_product:
+          attributes:
+            name:
+              blank: Product Name can't be blank
+            typ_category:
+              blank: Category can't be blank
+            typ_subcategory:
+              blank: Subcategory can't be blank
+            weight_in_grams:
+              blank: Weight in grams can't be blank
+              not_a_number: Weight in grams must contain numbers only
+            price:
+              blank: Price can't be blank
+              not_a_number: Price must contain numbers only
+            available_quantity:
+              blank: Available Quantity can't be blank
+              not_a_number: Available Quantity must contain numbers only
+              not_an_integer: Available Quantity must be an integer
+            expiry_date:
+              blank: Expiry Date can't be blank
+            online_order_available:
+              inclusion: You must choose whether this product can be ordered online or not
+            tax_amount:
+              inclusion: You must choose what tax rate to apply to this product

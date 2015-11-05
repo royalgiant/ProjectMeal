@@ -1,12 +1,12 @@
 var setupFieldsNeeded, setupManaged;
 $(document).ready(function() {
-    var regions;
+  var regions;
 
-    $('.deletePhoto').hide();
+  $('.deletePhoto').hide();
 
-    if ($('.profilePhoto').length){
-    	$('.photoPreview').hide()
-    }
+  if ($('.profilePhoto').length){
+  	$('.photoPreview').hide()
+  }
 
  	$('.profilePhoto').click(function(){
  		$('.profilePhoto').hide();
@@ -48,12 +48,7 @@ $(document).ready(function() {
     $('.org_people.edit').ready(function() {
         return $('li.sidebar_overview').addClass('active');
     });
-    $('.org_people.stripe_settings').ready(function() {
-        $('li.sidebar_stripe_settings').addClass('active');
-        // Stripe Connect code
-	    setupManaged() //pre-connection
-	    setupFieldsNeeded(); // Connected user, but we need info
-    });
+    
     regions = $('#org_person_org_contacts_attributes_0_typ_regions_id').html();
     $('#org_person_org_contacts_attributes_0_typ_countries_id').change(function() {
 	    var country, escaped_country, options;

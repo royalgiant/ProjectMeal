@@ -12,3 +12,34 @@
     </div>
   <% end %>
 <% end %>
+
+<%if @contact && @company%>
+  <% if @contact.errors.any? || @company.errors.any? %>
+    <div id="error_explanation" class="col-md-12">
+      <div class="alert alert-danger" role="alert">
+        The form contains <%= pluralize(@contact.errors.count + @company.errors.count, "error") %>.
+      </div>
+      <ul>
+        <% @company.errors.full_messages.each do |companymsg| %>
+          <li>* <%= companymsg %></li>
+        <% end %>
+        <% @contact.errors.full_messages.each do |contactmsg| %>
+          <li>* <%= contactmsg %></li>
+        <% end %>    
+      </ul>
+    </div>
+  <% end %>
+<%elsif @contact %>
+  <% if @contact.errors.any? %>
+    <div id="error_explanation" class="col-md-12">
+      <div class="alert alert-danger" role="alert">
+        The form contains <%= pluralize(@contact.errors.count, "error") %>.
+      </div>
+      <ul>
+      <% @contact.errors.full_messages.each do |msg| %>
+        <li>* <%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
