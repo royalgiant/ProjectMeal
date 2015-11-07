@@ -14,6 +14,8 @@ class OrgContact < ActiveRecord::Base
 	validates :business_number, presence: true, numericality: true, length: {minimum: 10, maximum: 15}
 	validates :cell_number, numericality: true, length: {minimum: 10, maximum: 15}, allow_blank: true
 
+	mount_uploader :avatar, AvatarUploader
+
 	geocoded_by :address
 	after_validation :geocode, :if => lambda{ |obj| obj.address1_changed? && obj.city_changed? && obj.postal_code_changed?}
 
