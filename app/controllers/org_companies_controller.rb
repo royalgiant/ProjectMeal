@@ -1,5 +1,6 @@
 class OrgCompaniesController < ApplicationController
-	before_action :signed_in_user, only: [:new]
+	before_action :signed_in_user, :user_has_role_in_company?, only: [:show, :edit, :update, :list_deliverers, :ajax_add_deliverers, :preferred_deliverers, :people ]
+	before_action :allowed_to_edit_company_info?, only: [:edit, :update]
 
 	def new
 		signed_in_user #Be sure the user is signed in before he can create a company
@@ -67,10 +68,20 @@ class OrgCompaniesController < ApplicationController
 
 		 # To see orders, products, company, the person should have a role in the company
 	    def user_has_role_in_company?
+	    	if current_org_person.typ_position_id.blank?
+	    		redirect_to edit_org_person_path(current_org_person.id), flash: {warning: "You need to be approved by the company you have been assigned to first to access the requested page."}
+	    	end
 	    end
 
 	    # Only COO, Director, and Regional Manager are allowed to edit company info
 	    def allowed_to_edit_company_info?
+	    	position = current_org_person.typ_person_id.to_i
+	    	if position == 1 || position == 2 || position ==3
+	    		true
+	    	else 
+	    		false
+	    		redirect_to edit_org_person_path(current_org_person.id), flash: {warning: "Access is restricted for your role."}
+	    	end
 	    end
 
 end
