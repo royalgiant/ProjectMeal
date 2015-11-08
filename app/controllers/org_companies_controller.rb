@@ -33,6 +33,9 @@ class OrgCompaniesController < ApplicationController
 		end	
 	end
 
+	def edit
+	end
+
 	private
 
 		# Checks if the user is signed in, if they are skip this function, if not
@@ -47,6 +50,9 @@ class OrgCompaniesController < ApplicationController
 
 		# strong parameters. These are the parameters we allow.
 		def company_register_params
+			params.require(:org_company).permit(:name, :avatar, :description, :typ_fee_id, {typ_companies: :id}, org_contacts_attributes: [:address1, :address2,
+	        :city, {typ_countries: :id}, {typ_regions: :id}, :postal_code, :email, 
+	        :business_number, :cell_number])
 		end
 
 		# Used to sanitize the user inputs. Accepts a hash as the parameter
