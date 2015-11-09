@@ -1,7 +1,7 @@
 <% if signed_in? %>
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
-	    <li class="sidebar_overview"><%= link_to "Overview", "#" %></li>
+	    <li class="sidebar_overview"><%= link_to "Overview", edit_org_person_path(current_org_person) %></li>
 	    <% if current_org_person != nil && current_org_person.org_company_id == nil %>
 	      <li class="sidebar_personal_purchases"><%= link_to "Personal Purchase History", "#" %></li>
 	    <% end %>
@@ -14,7 +14,7 @@
   	<ul class="nav nav-sidebar">
 	    <!-- company_id is from the sessions_helper.id -->
 	    <% if current_org_person != nil && current_org_person.org_company_id != nil %>
-	      <li class="sidebar_company_info"><%= link_to "Company Information", "#") %></li>
+	      <li class="sidebar_company_info"><%= link_to "Company Information", org_company_path(current_org_person.org_company_id) %></li>
 	      <li class="sidebar_company_people"><%= link_to "People", "#" %></li>
 	      <li class="sidebar_purchases"><%= link_to "Company Purchase History", "#" %></li>
 	  
