@@ -18,7 +18,7 @@
 			<%= f.file_field :avatar, accept: 'image/png,image/gif,image/jpeg, image/jpg', id: 'uploadCompanyAvatar'%>
 			<p class="deleteCompanyPhoto">Delete</p>
 
-			<%= render 'layout/companyfields', f: f%>
+			<%= render 'layouts/companyfields', f: f%>
 			<%= f.text_area :description, placeholder: "Description", :class => "form-control" %>
 			<%= f.submit "Save Changes", class: "btn btn-large btn-primary" %>
 		</div>

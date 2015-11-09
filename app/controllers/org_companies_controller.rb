@@ -34,13 +34,6 @@ class OrgCompaniesController < ApplicationController
 		end
 	end
 
-	def edit
-		@company = OrgCompany.find(param[:id]) #Find the company we're dealing with
-		# Attributes used to prepopulate the input fields
-		@contactInfo = OrgContact.find_or_create_by(org_company_id: params[:id]).attributes
-		@company.org_contacts.build(@contactInfo) # Build the contact input fields associated with company
-	end
-
 	def show 
 		@company = OrgCompany.find(params[:id]) #Find the company we are dealing with
 		@type_company = TypCompany.find_by_id(@company.typ_company_id) # Find the type of the company
@@ -49,6 +42,32 @@ class OrgCompaniesController < ApplicationController
 		@country = TypCountry.find_by_id(@contactInfo['typ_country_id']) # Find the type of the company
 		@region = TypRegion.find_by_id(@contactInfo['typ_region_id']) # Find the type of the company
 	end
+
+	def edit
+		@company = OrgCompany.find(params[:id]) #Find the company we're dealing with
+		# Attributes used to prepopulate the input fields
+		@contactInfo = OrgContact.find_or_create_by(org_company_id: params[:id]).attributes
+		@company.org_contacts.build(@contactInfo) # Build the contact input fields associated with company
+	end
+
+	def update
+		@company = OrgCompany.find(params[:id]) #Find the company we are dealing with
+		# Sanitize the parameters
+		@companyInfo = {description: company_edit_params["description"], avatar: company_edit_params["avatar"]}
+		@org_ca = company_params_sanitizer(company_edit_params["org_contacts_attributes"]["0"])
+		@contact = OrgContact.find_or_create_by(org_company_id: @company.id) #Find/Create a contact in the db if it doesn't exist
+		@contactInfo = @contact.attributes # If the update was not sucessful, we need the previous record data to rerender the edit page
+		# Try updating the the contact record  
+		if @contact.update_attributes(@org_ca) && @company.update(@companyInfo)
+	    	flash[:success] = "Company information updated" #Flash message success on next screen
+			redirect_to edit_org_company_path(@company)	# Go back to edit page
+		else 
+			@company.org_contacts.build(@contactInfo) #Build the fields with the previous record data
+			render :edit # Rerender edit page
+		end
+	end
+
+	
 
 	private
 
@@ -69,6 +88,13 @@ class OrgCompaniesController < ApplicationController
 	        :business_number, :cell_number])
 		end
 
+		# strong parameters. These are the parameters we allow.
+		def company_edit_params
+	      params.require(:org_company).permit(:name, :avatar, :description, org_contacts_attributes: [:address1, :address2,
+	        :city, {typ_countries: :id}, {typ_regions: :id}, :postal_code, :email, 
+	        :business_number, :cell_number])
+	    end
+
 		# Used to sanitize the user inputs. Accepts a hash as the parameter
 	    # Returns a hash that is acceptable for updating the database
 		def company_params_sanitizer(hash)
@@ -88,7 +114,7 @@ class OrgCompaniesController < ApplicationController
 
 	    # Only COO, Director, and Regional Manager are allowed to edit company info
 	    def allowed_to_edit_company_info?
-	    	position = current_org_person.typ_person_id.to_i
+	    	position = current_org_person.typ_position_id.to_i
 	    	if position == 1 || position == 2 || position ==3
 	    		true
 	    	else 
