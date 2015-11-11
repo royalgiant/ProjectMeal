@@ -1,4 +1,13 @@
 jQuery(function() {
+
+  $('.org_companies.show, .org_companies.edit').ready(function() {
+    return $('li.sidebar_company_info').addClass('active');
+  });
+
+  $('.org_companies.people').ready(function() {
+    return $('li.sidebar_company_people').addClass('active');
+  });
+
   var readURL, regions;
   
   regions = $('#org_company_org_contacts_attributes_0_typ_regions_id').html();

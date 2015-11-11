@@ -46,7 +46,7 @@ class OrgCompaniesController < ApplicationController
 	def edit
 		@company = OrgCompany.find(params[:id]) #Find the company we're dealing with
 		# Attributes used to prepopulate the input fields
-		@contactInfo = OrgContact.find_or_create_by(org_company_id: params[:id]).attributes
+		@contactInfo = OrgContact.find_or_create_by(org_company_id: params[:id], org_person_id: nil).attributes
 		@company.org_contacts.build(@contactInfo) # Build the contact input fields associated with company
 	end
 
@@ -55,7 +55,7 @@ class OrgCompaniesController < ApplicationController
 		# Sanitize the parameters
 		@companyInfo = {description: company_edit_params["description"], avatar: company_edit_params["avatar"]}
 		@org_ca = company_params_sanitizer(company_edit_params["org_contacts_attributes"]["0"])
-		@contact = OrgContact.find_or_create_by(org_company_id: @company.id) #Find/Create a contact in the db if it doesn't exist
+		@contact = OrgContact.find_or_create_by(org_company_id: @company.id, org_person_id: nil) #Find/Create a contact in the db if it doesn't exist
 		@contactInfo = @contact.attributes # If the update was not sucessful, we need the previous record data to rerender the edit page
 		# Try updating the the contact record  
 		if @contact.update_attributes(@org_ca) && @company.update(@companyInfo)
