@@ -15,7 +15,7 @@
 	    <!-- company_id is from the sessions_helper.id -->
 	    <% if current_org_person != nil && current_org_person.org_company_id != nil %>
 	      <li class="sidebar_company_info"><%= link_to "Company Information", org_company_path(current_org_person.org_company_id) %></li>
-	      <li class="sidebar_company_people"><%= link_to "People", "#" %></li>
+	      <li class="sidebar_company_people"><%= link_to "People", org_companies_people_path %></li>
 	      <li class="sidebar_purchases"><%= link_to "Company Purchase History", "#" %></li>
 	  
 	      <% if company_typ.typ_company_id == 1 %>

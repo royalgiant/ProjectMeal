@@ -67,7 +67,10 @@ class OrgCompaniesController < ApplicationController
 		end
 	end
 
-	
+	def people
+		@people = OrgContact.where(org_company_id: current_org_person.org_company_id).where.not(org_person_id: nil)
+		@cu_position = current_org_person.typ_position_id
+	end
 
 	private
 
