@@ -1,0 +1,52 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+<div class="col-md-10 col-md-offset-2 main">
+  <% provide(:title, "Team Roster") %>
+  <% if !@people.empty?%>
+    <center><h1><%= @people[0].org_company.name%>'s Roster</h1></center>
+    <%= render 'shared/error_messages' %>
+    <div class="col-md-12 "> 
+      <table class="table">
+        <thead>
+          <tr>
+            <th><center>First Name</center></th>
+            <th><center>Last Name</center></th>
+            <th><center>Email</center></th>
+            <th><center>Role</center></th>
+            <th><center>Actions</center></th> 
+          </tr>
+        </thead>
+        <tbody>
+          <% @people.each do |person| %>
+            <tr>
+              <td class="col-sm-2"><center><span><%= person.org_person.first_name%></span></center></td>
+              <td class="col-sm-2"><center><span><%= person.org_person.last_name%></span></center></td>
+              <td class="col-sm-2"><center><span><%= person.email%></span></center></td>
+              <% if !person.org_person.typ_position.blank? %>
+                  <td class="col-sm-2 user-role"><center><span><%= person.org_person.typ_position.name %></span></center></td>
+              <% else %>
+                  <td class="col-sm-2 user-role"><center><span><%= collection_select(:org_person, :typ_position_id, TypPosition.where.not(id:1).where('id > ?', @cu_position), :id, :name, {prompt: 'Please Select Role'}, {:class => 'form-control', id: 'roster', org_person_id: person.org_person_id})%></span></center></td>
+              <% end %>
+              <td class="col-sm-2">
+                <center>
+                  <% if (!person.org_person.typ_position_id.blank? && (@cu_position < person.org_person.typ_position_id)) %>
+                    <!-- If the person has a role and your role is less than theirs, you are of higher status and can edit them -->
+                    <button type="button" class="btn btn-primary edit-role" org-person-id=<%= person.org_person_id%>>Edit Role</button>
+                    <button type="button" class="btn btn-danger remove-roster" org-person-id=<%= person.org_person_id%>>Remove</button>
+                    <!-- If you are the COO (i.e. 0) or not of Employee level (i.e. 5) you can do edit/remove roles -->
+                  <% elsif ((person.org_person.typ_position_id == 0 || person.org_person.typ_position_id == nil ) && (0 < @cu_position && @cu_position < 5)) %>
+                    <button type="button" class="btn btn-primary edit-role" org-person-id=<%= person.org_person_id%>>Edit Role</button>
+                    <button type="button" class="btn btn-danger remove-roster" org-person-id=<%= person.org_person_id%>>Remove</button>
+                  <% end %>
+                </center>
+              </td> 
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <center><h1>Join a Company and be Approved to View Team!</h1></center>
+  <% end %>
+</div>
