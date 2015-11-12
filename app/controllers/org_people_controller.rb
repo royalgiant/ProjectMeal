@@ -40,6 +40,12 @@ class OrgPeopleController < ApplicationController
 		end
 	end
 
+	# Edits a position/role (i.e. COO, Director, Store Manager, etc.)
+	def edit_position
+		person_info = OrgPerson.find_by_id(params[:id])
+		person_info.update(typ_position_id: params[:typ_position_id], org_company_id: current_org_person.org_company_id)
+	end
+
 	private 
 		def update_person_params
 			params.require(:org_person).permit(org_contacts_attributes: [:address1, :address2,

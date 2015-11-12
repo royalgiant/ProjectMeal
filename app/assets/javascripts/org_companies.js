@@ -8,6 +8,52 @@ jQuery(function() {
     return $('li.sidebar_company_people').addClass('active');
   });
 
+  $('#roster').change(function() {
+    var org_person_id, position;
+    position = $('#roster :selected').val();
+    org_person_id = $('#roster').attr('org_person_id');
+    return $.ajax({
+      url: "/org_people/edit_position",
+      method: "POST",
+      data: {
+        id: org_person_id,
+        typ_position_id: position
+      },
+      dataType: "html",
+      success: location.reload()
+    });
+  });
+
+  $('button.edit-role').click(function() {
+    var org_person_id;
+    org_person_id = $('button.edit-role').attr('org-person-id');
+    return $.ajax({
+      url: "/org_people/edit_position",
+      method: "POST",
+      data: {
+        id: org_person_id,
+        typ_position_id: null
+      },
+      dataType: "html",
+      success: location.reload()
+    });
+  });
+
+  $('button.remove-roster').click(function() {
+    var org_person_id;
+    org_person_id = $('button.remove-roster').attr('org-person-id');
+    return $.ajax({
+      url: "/org_people/remove_from_company",
+      method: "POST",
+      data: {
+        id: org_person_id,
+        typ_position_id: 0
+      },
+      dataType: "html",
+      success: location.reload()
+    });
+  });
+
   var readURL, regions;
   
   regions = $('#org_company_org_contacts_attributes_0_typ_regions_id').html();
