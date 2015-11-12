@@ -45,6 +45,13 @@ class OrgPeopleController < ApplicationController
 		person_info = OrgPerson.find_by_id(params[:id])
 		person_info.update(typ_position_id: params[:typ_position_id], org_company_id: current_org_person.org_company_id)
 	end
+	# Removes a person from the company
+	def remove_from_company
+		person_info = OrgPerson.find_by_id(params[:id])
+		person_info.update(typ_position_id: 0, org_company_id: nil)
+		contact_info = OrgContact.find_by(org_person_id: params[:id])
+		contact_info.update(org_company_id: nil)
+	end
 
 	private 
 		def update_person_params
