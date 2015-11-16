@@ -32,6 +32,20 @@ class OrgProductsController < ApplicationController
 	private
 
 	def get_tax_details
+		# Find company's contact information
+		company = OrgContact.find_by(org_company_id: current_org_person.org_company_id, org_person_id: nil)
+		# Find the region where this company lies, and its respective sales taxes
+		type_sales_taxes = company.typ_region.typ_sales_taxes
+		@tax_details = Hash.new
+		total_tax = 0
+		type_sales_taxes.each do |tax|
+			total_tax = total_tax + tax.tax_rate # Total up the total taxes
+			# Put into the hash a key-value pair of tax_name => tax_rate
+			@tax_details[tax.typ_tax.name] = tax.tax_rate
+		end
+		@tax_details["Total"] = total_tax
+		@tax_details["None"] = 0
+		return @tax_details	
 	end
 
 	# strong parameters. These are the parameters we allow.
