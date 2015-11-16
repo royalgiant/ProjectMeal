@@ -6,7 +6,7 @@ class CreateOrgProducts < ActiveRecord::Migration
         t.belongs_to :typ_subcategory
     	t.string :name, null: false
     	t.text :description, null: false
-    	t.decimal :weight_in_grams, default: 0, null: false
+    	t.decimal :weight_in_grams, null: false
     	t.decimal :price, precision:5, scale: 2, null: false
     	t.integer :available_quantity, null: false
     	t.datetime :expiry_date, null: false
