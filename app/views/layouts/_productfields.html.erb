@@ -1,0 +1,34 @@
+<% if !@product["image"].blank? %>
+	<%= image_tag @product.image_url(:medium).to_s, :class=>"imagePhoto" %>
+<% end %>
+<div class="imagePreview">
+	<i class="fa fa-upload imageUpload"></i>
+	<p id="uploadClick">Click to Upload</p>
+</div>
+
+<%= f.file_field :image, accept: 'image/png,image/gif,image/jpeg, image/jpg', id: 'uploadImage' %>
+<p class="deleteFoodImage">Delete</p>
+
+<%= f.text_field :name, placeholder: "Product Name", :class => "form-control" %>
+<%= f.fields_for :typ_category do |category|%>
+<%= category.collection_select :id, TypCategory.order(:name),:id,:name, {prompt: "Please Select Category", selected: @product["typ_category_id"] }, {:class => "form-control"} %>
+<% end %>
+<%= f.fields_for :typ_subcategory do |subcategory|%>
+<%= subcategory.grouped_collection_select :id, TypCategory.order(:name),:typ_subcategory, :name, :id, :name, {prompt: "Please Select Subcategory", selected: @product["typ_subcategory_id"] }, {:class => "form-control"}%>
+<% end %>
+<%= f.text_field :price, placeholder: "Price", :class => "form-control", :value => (number_with_precision(@product.price, :precision => 2)) %>
+<%= f.text_field :weight_in_grams, placeholder: "Weight in grams", :class => "form-control" %>
+<%= f.text_field :available_quantity, placeholder: "Available Quantity", :class => "form-control" %>
+<%= f.date_field :expiry_date, placeholder: "Expiration Date", :class => "form-control expiry_field" %>
+<%= f.text_area :description, placeholder: "Description", :class => "form-control" %>
+<div class="order-online-radios">
+	<span>Will customers be able to order this product online?</span>
+	<%= f.radio_button :online_order_available, true %> Yes
+	<%= f.radio_button :online_order_available, false %> No
+</div>
+<div class="order-online-radios">
+	<span>Choose the tax option that applies for your product:</span>
+	<% @tax_details.each do |t| %>
+		<span><%= f.radio_button :tax_amount, t[1] %> <%= t[0]%> (<%= number_to_percentage(t[1], strip_insignificant_zeros:true)%>)</span>
+	<% end %>	
+</div>

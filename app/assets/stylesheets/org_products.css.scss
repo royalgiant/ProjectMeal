@@ -1,0 +1,120 @@
+// Place all the styles related to the org_products controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+$photoGray: #B4B4B4;
+
+input.saveButton{
+	margin-top:10px;
+}
+
+div.votes{
+	span.tally-likes{
+		margin-right: 3px;	
+		color: #32cd32;	
+	}
+	span.tally-dislikes{
+		margin-right: 3px;	
+		color: #ff0000;	
+	}
+}
+
+div#prodInfo{
+	div.price{
+      color: #32cd32;
+    }
+    div.expiry{
+      color: #FF0000;
+    }
+}
+
+.imagePhoto{
+	width: 150px;
+	margin: 0 auto;
+	display: block;
+	margin-bottom: 10px;
+	height: 150px;
+	cursor: pointer;
+}
+
+.displayImage{
+	width: 150px;
+	height: 150px;
+	display: block;
+	border: 5px ridge white;
+	margin: 5px 0 5px 0;
+}
+
+.prodImage{
+	p {
+		text-align: center;
+		color: $photoGray;
+		font-size: 14px;
+	}
+	.photoUpload {
+		display: block;
+		font-size: 32px;
+		margin: 35px auto 0 auto;
+		text-align: center;
+		color: $photoGray;
+	}
+}
+
+div.org_products_index_info{
+	padding: 5px 0 0 10px;
+}
+
+ul.products li{
+	padding: 2px;
+	div.prodImage, div.displayImage{
+		padding: 0;
+		width: 150px;
+	}
+}
+
+div.imagePreview{
+	border: 1px solid $photoGray;
+	width: 150px;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	height: 150px;
+	cursor: pointer;
+	background-repeat: no repeat;
+	background-position: center;
+	background-size: 100% 100% !important;
+	text-align: center;
+	.imageUpload {
+		font-size: 32px;
+		margin-top: 35px;
+		color: $photoGray;
+	}
+	.fa {
+		display: inline-block;
+		text-rendering: auto;
+	}
+	
+	p {
+		color: $photoGray;
+		font-size: 16px;
+	}
+}
+input#uploadImage{
+	display: none;
+}
+p.deleteFoodImage{
+	color: #DA7364;
+	cursor: pointer;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+div.order-online-radios{
+	margin-bottom:10px;
+	div.field_with_errors {
+		display: inline;
+	}
+}
+
+.delivery-status-check{
+	margin: 60px 0 5px 0;
+}
