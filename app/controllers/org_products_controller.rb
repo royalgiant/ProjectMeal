@@ -3,6 +3,10 @@ class OrgProductsController < ApplicationController
 	before_action :registered_company, only: [:index, :new, :create, :edit, :update, :delete]
 
 	def index
+		@currency = Money.new(1, session[:currency]["iso_code"]).currency
+		if current_org_person.org_company_id
+			@org_products = OrgProduct.paginate(page: params[:page]).where(org_company_id: current_org_person.org_company_id)
+		end
 	end
 
 	def show

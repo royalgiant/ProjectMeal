@@ -1,0 +1,17 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+<div class="col-md-7 col-md-offset-3 main">
+  <% provide(:title, "Edit product") %>
+  <center><h1>Update Product</h1></center>
+  <%= form_for(@product) do |f| %>
+  	<%= render 'shared/error_messages' %>
+  	<div class="col-md-12">
+  		<%= render 'layouts/productfields', f: f %>
+  		<%= f.submit "Save Changes", class: "btn btn-large btn-primary saveButton"%>
+	    <button class="btn btn-danger" id="editCompanyInfoButton">
+	      <%= link_to "Delete Product", org_product_path(@product.id), method: :delete, data: { confirm: "You sure?"} %>
+	    </button>
+  	</div>
+  <% end %>
+</div>
