@@ -18,6 +18,21 @@ class OrgProductsController < ApplicationController
 	end
 
 	def create
+		# Grab the contact information for the company
+		@tax_details = get_tax_details # Get the tax options for this post based on company location
+		@companyContact = OrgContact.find_by(org_company_id: current_org_person.org_company_id, org_person_id: nil)
+		@productInfo = product_params_sanitizer(product_params) # Use sanitizer to return a sanitized hash
+		@productInfo[:org_company_id] = @companyContact["org_company_id"] # Add the org_company_id in the hash
+		@productInfo[:latitude] = @companyContact["latitude"]
+		@productInfo[:longitude] = @companyContact["longitude"]
+		@product = OrgProduct.create(@productInfo)
+
+		if @product.update_attributes(@productInfo) # If we save properly
+			flash[:success] = "Thank you. Your product - "+@productInfo['name']+" - has been posted"
+			redirect_to edit_org_product_path(@product.id)	# Redirect us to product edit path
+		else
+			render :new
+		end
 	end
 
 	def edit

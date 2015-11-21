@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   	if !has_contact_info.nil?
   		if !session[:return_to].nil?
   			session[:return_to]
-  			session.delete[:return_to]
+  			session.delete(:return_to)
   		else
   			edit_org_person_path(current_org_person.id)
   		end
