@@ -23,7 +23,7 @@
   				<div class="col-md-8 org_products_index_info">
   					<div>Food Product: <%= link_to product.name, edit_org_product_path(product.id)%></div>
   					<div>Weight in Grams: <%= product.weight_in_grams%></div>
-  					<div>Approx. Available Quantity: <%= product.available_quanity %></div>
+  					<div>Approx. Available Quantity: <%= product.available_quantity %></div>
   					<div class="price">Price: <%= @currency.symbol %><%= number_with_precision(product.price, precision: 2) %></div>
   					<div>Expiry Date: <%= product.expiry_date.strftime("%B %d, %Y") %></div>
   				</div>

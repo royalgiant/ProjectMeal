@@ -1,4 +1,5 @@
 class OrgContact < ActiveRecord::Base
+	before_save { self.email = email.downcase }
 	belongs_to :org_person, foreign_key: "org_person_id"
 	belongs_to :org_company, foreign_key: "org_company_id"
 	belongs_to :typ_contact, foreign_key: "typ_contact_id"
@@ -19,6 +20,7 @@ class OrgContact < ActiveRecord::Base
 	geocoded_by :address
 	after_validation :geocode, :if => lambda{ |obj| obj.address1_changed? && obj.city_changed? && obj.postal_code_changed?}
 
+	# Whenever any of the 3 fields below change, then we re-geocode
 	def address
 		[city, postal_code, address1].compact.join(', ')
 	end
