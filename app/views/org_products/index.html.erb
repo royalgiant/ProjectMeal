@@ -1,0 +1,37 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+<div class="col-md-10 col-md-offset-2 main">
+  <% provide(:title, "Product Listings") %>
+  <center><h1>Listing of all products for sale</h1></center>
+
+  <% if @org_products.count > 0 %>
+  	<%= will_paginate @org_products, renderer: BootstrapPagination::Rails %>
+  	<ul class="products">
+  		<% @org_products.each do |product| %>
+  			<li>
+  				<div class="col-md-2 prodImage">
+  					<% if !product["image"].blank? %>
+  						<%= image_tag product.image_url(:medium).to_s, :class => "displayImage" %>
+  					<% else %>
+  						<div class="displayImage">
+  							<i class="fa fa-question-circle photoUpload"></i>
+  							<p>Picture Unavailable</p>
+  						</div>
+  					<% end %>
+  				</div>
+  				<div class="col-md-8 org_products_index_info">
+  					<div>Food Product: <%= link_to product.name, edit_org_product_path(product.id)%></div>
+  					<div>Weight in Grams: <%= product.weight_in_grams%></div>
+  					<div>Approx. Available Quantity: <%= product.available_quanity %></div>
+  					<div class="price">Price: <%= @currency.symbol %><%= number_with_precision(product.price, precision: 2) %></div>
+  					<div>Expiry Date: <%= product.expiry_date.strftime("%B %d, %Y") %></div>
+  				</div>
+  			</li>
+  		<% end %>
+  	</ul>
+  	<%= will_paginate @org_products, renderer: BootstrapPagination::Rails %>
+  <% else %>
+  	<center><h4>There are no items posted for sale by your company</h4></center>
+  <% end %> 
+</div>
