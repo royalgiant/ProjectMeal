@@ -68,6 +68,9 @@ class OrgProductsController < ApplicationController
 	end
 
 	def destroy
+		OrgProduct.find(params[:id]).destroy
+		flash[:success] = "Listing deleted."
+		redirect_to org_products_path
 	end
 
 	private
