@@ -1,0 +1,44 @@
+<div class="col-md-9 col-md-offset-2 main">
+	<% provide(:title, "Company Information") %>
+	<div class="col-md-12">
+		<center>
+			<div class="companyLogo">
+				<% if !@company["avatar"].blank? %>
+					<%= image_tag @company.avatar_url(:medium).to_s, :class =>"displayCompanyLogo"%>
+				<% else %>
+					<div class="displayCompanyLogo">
+	                <i class="fa fa-question-circle companyPhotoUpload"></i>
+	                <p>Picture Unavailable</p>
+	              </div>
+				<% end %>
+			</div>
+			<h1><%= @company.name%></h1>
+			<div>
+				<h5>Address Line 1: </h5><span><%= @contactInfo['address1']%></span>
+			</div>
+			<div>
+				<h5>Address Line 2: </h5><span><%= @contactInfo['address2']%></span>
+			</div>
+			<div>
+				<h5>City: </h5><span><%= @contactInfo['city']%></span>
+			</div>
+			<div>
+				<h5>Country: </h5><span><%= @country.country%></span>
+			<div>
+				<h5>Region: </h5><span><%= @region.name%></span>
+			</div>
+			<div>
+				<h5>Postal Code: </h5><span><%= @contactInfo['postal_code']%></span>
+			</div>
+			<div>
+				<h5>Business Number: </h5><span><%= @contactInfo['business_number']%></span>
+			</div>
+			<div>
+				<h5>Cell Number: </h5><span><%= @contactInfo['cell_number']%></span>
+			</div>
+			<div>
+				<h5>Description: </h5><span><%= simple_format(@company.description, {:class=>"desc_format"}, wrapper_tag: "p")%></span>
+			</div>
+		</center>
+	</div>
+</div>

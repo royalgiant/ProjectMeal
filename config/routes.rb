@@ -10,8 +10,10 @@ Rails.application.routes.draw do
     delete 'signout', to: 'org_people/sessions#destroy'
   end
 
+  get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   
+
   post 'org_people/edit_position/' => 'org_people#edit_position', :to => "org_people_edit_position"
   post 'org_people/remove_from_company/' => 'org_people#remove_from_company', :to => "org_people_remove_from_company"
 

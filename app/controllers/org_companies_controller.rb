@@ -67,6 +67,14 @@ class OrgCompaniesController < ApplicationController
 		end
 	end
 
+	# Shows the profile of the company from the catalogues search result item
+	def company_profile
+		@company = OrgCompany.find_by_id(params[:id])
+		@contactInfo = OrgContact.find_by(org_company_id: params[:id], org_person_id: nil)
+		@country = TypCountry.find_by_id(@contactInfo['typ_country_id']) # Find the type of the company
+		@region = TypRegion.find_by_id(@contactInfo['typ_region_id']) # Find the type of the company
+	end
+
 	def people
 		@people = OrgContact.where(org_company_id: current_org_person.org_company_id).where.not(org_person_id: nil)
 		@cu_position = current_org_person.typ_position_id
