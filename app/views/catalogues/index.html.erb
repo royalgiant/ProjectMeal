@@ -33,11 +33,43 @@
               <span><%= hidden_field_tag 'tax', product.tax_amount %></span>
               <div class="price"> <%= @currency.symbol %><span><%= number_with_precision(product.price, precision: 2)%></span></div>
               <div class="grocer">Grocer: <span><%= link_to product.org_company.name, org_companies_company_profile_path(product.org_company.id)%></span></div>
-              
+              <% if product.weight_in_grams != 0%>
+                <div id="wig">Grams Per Item: <span><%= product.weight_in_grams %></span> grams or <%= number_with_precision((product.weight_in_grams/1000.00), precision: 2)%> kg</div>
+              <% else %>
+                <div id="wig" class="hidden">Grams Per Item: <span><%= product.weight_in_grams %></span> grams</div>
+              <% end %>
+              <% if product.available_quantity > 150 %>
+                <div id="aq" class="hidden">Approx. Available Quantity: <span><%= product.available_quantity %></span></div>
+              <% else %>
+                <div id="aq">Approx. Available Quantity: <span><%= product.available_quantity %></span></div>
+              <% end %>
+              <% if product.expiry_date.to_date < (Date.today + 60.days) %>
+                <div class="expiry">Expiry Date: <i><%= product.expiry_date.to_date.to_formatted_s(:long_ordinal) %></i></div>
+              <% else %>
+                <div class="expiry hidden">Expiry Date: <i><%= product.expiry_date.to_date.to_formatted_s(:long_ordinal) %></i></div>
+              <% end %>
             </div>
+            <% if product.online_order_available == true %>
+              <div class="col-md-2 quantity-box">
+                <% render :partial => "layouts/additem", locals: {product: product, page: "catalogue_index"}%>
+              </div>
+            <% end %>
+            <% if current_org_person %>
+              <% if product.online_order_available == true %>
+                <div class="btn-group col-sm-9 col-md-offset-2 vote-buttons">
+                  <%= render :partial => "layouts/votebuttons", locals: {product: product} %>
+              <% else %>
+                <div class="btn-group col-sm-2 quantity-box">
+                  <div class="btn-group col-sm-9 col-md-offset-2 vote-buttons">
+                    <%= render :partial => "layouts/votebuttons", locals: {product: product} %>
+                  </div>
+              <% end %>
+              </div>
+            <% end %>
           </div>
         </li>
         <% end %>
       </ul>
+      <%= will_paginate @query, renderer: BootstrapPagination::Rails %>
   <% end %>
 </div>
