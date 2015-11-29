@@ -1,3 +1,73 @@
-// Place all the styles related to the catalogues controller here.
+// Place all the styles related to the Catalogues controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* mixins, variables, etc. */
+
+$grayMediumLight: #eaeaea;
+
+/* Catalogue index */
+
+.catalogue {
+  list-style: none;
+  padding: 0;
+  li {
+    border-top: 1px solid $grayMediumLight;
+    &:last-child {
+      border-bottom: 1px solid $grayMediumLight;
+    }
+    div.price{
+      color: #32cd32;
+    }
+    div.expiry{
+      color: #FF0000;
+    }
+    div.hidden{
+      display: none;
+    }
+  }
+  div#prodInfo{
+    padding-left:5px;
+  }
+
+  div.prodImage, div.displayImage{
+    padding: 0;
+    width: 150px;
+  }
+  
+  div.unavailable-product{
+    background-color: #f7f7f9;
+    margin: 0 !important;
+    div, h4{
+      .price,.grocer, #wig, #aq, .expiry, #title{
+        text-decoration: line-through;
+      }
+    }
+  }
+  div.not-available{
+    margin: 30px 0 5px;
+    padding-left:0;
+  }
+}
+
+.quantity-box{
+	margin: 10px 0 5px;
+  width: 200px !important;
+}
+
+.form-margins{
+  margin-bottom: 10px;
+}
+
+.vote-buttons{
+  margin-top: 10px;
+}
+
+.vote-buttons-online-order-inactive{
+  margin-left: 28.33px;
+  padding-left: 15px;
+}
+
+.voted{
+  color: #1e90ff !important;
+}
