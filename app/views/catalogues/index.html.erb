@@ -28,6 +28,11 @@
               <% end %>
             </div>
             <div class="col-md-8" id="prodInfo">
+              <h4 id="title"><%= link_to product.name, product %></h4>
+              <span><%= hidden_field_tag 'id', product.id %></span>
+              <span><%= hidden_field_tag 'tax', product.tax_amount %></span>
+              <div class="price"> <%= @currency.symbol %><span><%= number_with_precision(product.price, precision: 2)%></span></div>
+              <div class="grocer">Grocer: <span><%= link_to product.org_company.name, org_companies_company_profile_path(product.org_company.id)%></span></div>
               
             </div>
           </div>
