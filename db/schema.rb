@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151010084118) do
+ActiveRecord::Schema.define(version: 20151129211814) do
+
+  create_table "carts", force: :cascade do |t|
+    t.integer  "org_person_id",   limit: 4
+    t.integer  "org_product_id",  limit: 4
+    t.string   "name",            limit: 255,                                        null: false
+    t.float    "tax_amount",      limit: 24,                           default: 0.0
+    t.decimal  "price",                       precision: 5,  scale: 2,               null: false
+    t.string   "grocer",          limit: 255,                                        null: false
+    t.integer  "quantity",        limit: 4,                                          null: false
+    t.decimal  "weight_in_grams",             precision: 10,                         null: false
+    t.datetime "expiry_date",                                                        null: false
+    t.datetime "created_at",                                                         null: false
+    t.datetime "updated_at",                                                         null: false
+  end
 
   create_table "org_companies", force: :cascade do |t|
     t.string   "name",             limit: 255,   null: false
@@ -96,7 +110,7 @@ ActiveRecord::Schema.define(version: 20151010084118) do
     t.integer  "typ_subcategory_id",     limit: 4
     t.string   "name",                   limit: 255,                                          null: false
     t.text     "description",            limit: 65535,                                        null: false
-    t.decimal  "weight_in_grams",                      precision: 10,           default: 0,   null: false
+    t.decimal  "weight_in_grams",                      precision: 10,                         null: false
     t.decimal  "price",                                precision: 5,  scale: 2,               null: false
     t.integer  "available_quantity",     limit: 4,                                            null: false
     t.datetime "expiry_date",                                                                 null: false
@@ -105,6 +119,28 @@ ActiveRecord::Schema.define(version: 20151010084118) do
     t.boolean  "online_order_available", limit: 1,                                            null: false
     t.float    "tax_amount",             limit: 24,                             default: 0.0
     t.string   "image",                  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "preferred_deliverers", force: :cascade do |t|
+    t.integer "deliverer_id", limit: 4, null: false
+    t.integer "supplier_id",  limit: 4, null: false
+  end
+
+  create_table "shipping_addresses", force: :cascade do |t|
+    t.string   "first_name",   limit: 255,   null: false
+    t.string   "last_name",    limit: 255,   null: false
+    t.string   "address1",     limit: 255,   null: false
+    t.string   "address2",     limit: 255
+    t.string   "city",         limit: 255,   null: false
+    t.string   "region",       limit: 255,   null: false
+    t.string   "postal_code",  limit: 255,   null: false
+    t.string   "country",      limit: 255,   null: false
+    t.string   "telephone",    limit: 255
+    t.string   "email",        limit: 255
+    t.text     "description",  limit: 65535
+    t.integer  "trx_order_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
   end
