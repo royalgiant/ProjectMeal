@@ -1,0 +1,23 @@
+<div class="input-group">
+	<% if current_org_person %>
+		<% if page == "org_products_show"%>
+			<input id="quantity" name="quantity" type="text" class="form-control" placeholder="Enter Quantity" value=<%= @cart[0].try(:quantity) %>>
+		<% elsif @cart.select{ |cart| cart["org_product_id"] == product.id}[0].try(:quantity) && page == "catalogue_index" %>
+			<input id="quantity" name="quantity" type="text" class="form-control" placeholder="Enter Quantity" value=<%= @cart.select{|cart| cart["org_product_id"] == product.id}[0].try(:quantity) %> >
+		<% else %>
+			<input id="quantity" name="quantity" type="text" class="form-control"  placeholder="Enter Quantity" />
+		<% end %>
+	<% else %>
+		<% if @cart[product.id.to_s] %>
+			<input id="quantity" name="quantity" type="text" class="form-control" placeholder="Enter Quantity" value=<%= @cart[product.id.to_s]["quantity"]%> />
+		<% else %>
+			<input id="quantity" name="quantity" type="text" class="form-control"  placeholder="Enter Quantity" />
+		<% end %>
+	<% end %>
+
+	<span class="input-group-btn">
+		<button class="btn btn-success addedPopup" data-toggle="modal" data-target="#addedPopup-modal<%=product.id%>" type="submit" >
+			Add
+		</button>
+	</span>
+</div>
