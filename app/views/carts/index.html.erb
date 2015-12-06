@@ -1,0 +1,72 @@
+<div class="col-md-9 col-md-offset-2 main">
+  <%= provide(:title, "Shopping Cart") %>
+	<% if @org_products.empty? %>
+		<center><h1>There are no items in your cart</h1></center>
+	<% else %>
+		<center><h1>Items in your cart</h1></center>
+		<ul class="catalogue">
+			<% @org_products.each do |product| %>
+			<li>
+				<% if product[0].available_quantity > 0 && Time.now < product[0].expiry_date.to_date.to_formatted_s(:long_ordinal) %>
+					<div class="row">
+						<div class="col-md-2 prodImage">
+							<% if !product[0].image.blank? %>
+			                  <%= image_tag product[0].image_url(:medium).to_s, :class =>"displayImage"%>  
+			                <% else %>  
+			                  <div class="displayImage">
+			                    <i class="fa fa-question-circle photoUpload"></i>
+			                    <p>Picture Unavailable</p>
+			                  </div>
+			                <% end %>
+						</div>
+						<div class="col-md-7" id="prodInfo">
+				<% else %>
+					<div class="row unavailable-product">
+						<div class="col-md-4">
+				<% end %>
+
+							<h4 id="title"><%= link_to product[0].name, product[0] %></h4>
+							<span><%= hidden_field_tag 'id', product[0].id%></span>
+		                	<span><%= hidden_field_tag 'tax', product[0].tax_amount%></span>
+		                	<div class="price">Price: <%= @currency.symbol %><span><%= number_with_precision(product[0].price, precision: 2) %></span></div>
+		                	<div class="grocer">Grocer: <span><%= product[0].org_company.name%></span></div>
+		                	<% if product[0].weight_in_grams != 0 %>
+			                  <div id="wig">Grams Per Item: <span><%= product[0].weight_in_grams %></span> grams or <%= number_with_precision((product[0].weight_in_grams/1000.00), precision: 2)%> kg</div>
+			                <% else %>
+			                  <div id="wig" class="hidden">Grams Per Item: <span><%= product[0].weight_in_grams %></span> grams</div>
+			                <% end %>
+			                <% if product[0].available_quantity > 150 %>
+			                  <div id="aq" class="hidden">Approx. Available Quantity: <span><%= product[0].available_quantity %></span></div>
+			                <% else %>
+			                  <div id="aq">Approx. Available Quantity: <span><%= product[0].available_quantity %></span></div>
+			                <% end %>
+			                <% if product[0].expiry_date.to_date < (Date.today + 60.days)%>
+			                  <div class="expiry">Expiry Date: <i><%= product[0].expiry_date.to_date.to_formatted_s(:long_ordinal) %></i></div>
+			                <% else %>
+			                  <div class="expiry hidden">Expiry Date: <i><%= product[0].expiry_date.to_date.to_formatted_s(:long_ordinal) %></i></div>
+			                <% end %>
+	               		</div>
+	               		<% if product[0].available_quantity > 0 && Time.now < product[0].expiry_date.to_date.to_formatted_s(:long_ordinal) %>
+	               			<div class="col-sm-3 quantity-box">
+	               				<!-- Make sure the quantity is smaller or as big as available quantity -->
+	               				<div class="input-group">
+	               					<% if current_org_person %>
+	               						<input id="quantity" name="quantity" type="text" class="form-control" placeholder="Edit Quantity." value=<%= product[1].quantity%> />
+	               					<% else %> 
+                      					<input id="quantity" name="quantity" type="text" class="form-control" placeholder="Edit Quantity." value=<%= session[:cart][product[0][:id].to_s]["quantity"]%> />
+                      				<% end %>
+                      				<span class="input-group-btn">
+                      					<button class="btn btn-success addedPopup" data-toggle="modal" data-target="#addedPopup-modal<%= product[0].id%>" type="submit">Edit</button>
+                      					<% if current_org_person %>
+                      						<button type="button" class="btn btn-danger remove" id="deleteProductFromSession"> <%= link_to "Delete", cart_path(product[1].id), method: :delete, data: { confirm: "You really want to delete "+product[1].name+" from your cart?"} %>
+                      					<% else %>
+                      						<button type="button" class="btn btn-danger remove" id="deleteProductFromSession"> <%= link_to "Delete", cart_path(product[0].id), method: :delete, data: { confirm: "You really want to delete "+product[0].name+" from your cart?"} %>
+                      					<% end %>
+                      					
+                      				</span>
+	               		<% end %>
+			</li>
+			<% end %>
+		</ul>
+	<% end %>
+</div>
