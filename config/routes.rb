@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     delete 'signout', to: 'org_people/sessions#destroy'
   end
 
+
+  post 'carts/add/' => 'carts#add', :to => 'carts_add'
+
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   
@@ -46,6 +49,7 @@ Rails.application.routes.draw do
   #     end
   #   end
 
+  resources :carts
   resources :catalogues
   resources :org_people
   resources :org_companies
