@@ -12,7 +12,7 @@ class OrgProduct < ActiveRecord::Base
 	validates_inclusion_of :online_order_available, in: [true,false] 
 	mount_uploader :image, ImageUploader
 	searchkick locations: ["location"]
-
+	acts_as_votable
 	def search_data
 		attributes.merge(
 			location: [latitude, longitude],

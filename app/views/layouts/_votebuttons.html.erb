@@ -1,0 +1,16 @@
+   <% if current_org_person.voted_up_on? product%>
+    <button type="button" class="btn btn-default thumbup voted" aria-label="Left Align">
+      <span class="fa fa-thumbs-o-up" aria-hidden="true" vote="upvote" id="<%= product.id%>"></span>
+  <% else %>
+    <button type="button" class="btn btn-default thumbup" aria-label="Left Align">
+      <span class="fa fa-thumbs-o-up" aria-hidden="true" vote="upvote" id="<%= product.id%>"></span>
+  <% end %> 
+</button>
+  <% if current_org_person.voted_down_on? product%>
+    <button type="button" class="btn btn-default thumbdown voted" aria-label="Left Align">
+     <span class="fa fa-thumbs-o-down" aria-hidden="true" vote="downvote" id="<%= product.id%>"></span>
+  <% else %>
+    <button type="button" class="btn btn-default thumbdown" aria-label="Left Align">
+      <span class="fa fa-thumbs-o-down" aria-hidden="true" vote="downvote" id="<%= product.id%>"></span>
+  <% end %>
+</button>
