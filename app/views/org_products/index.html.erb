@@ -26,6 +26,10 @@
   					<div>Approx. Available Quantity: <%= product.available_quantity %></div>
   					<div class="price">Price: <%= @currency.symbol %><%= number_with_precision(product.price, precision: 2) %></div>
   					<div>Expiry Date: <%= product.expiry_date.strftime("%B %d, %Y") %></div>
+            <div class="votes">
+              <span class="fa fa-thumbs-o-up tally-likes" aria-hidden="true" vote="upvote" id="<%= product.id%>"></span><span class="tally-likes"><%= product.get_likes.size %></span>
+              <span class="fa fa-thumbs-o-down tally-dislikes" aria-hidden="true" vote="downvote" id="<%= product.id%>"></span><span class="tally-dislikes"><%= product.get_dislikes.size %></span>
+            </div>
   				</div>
   			</li>
   		<% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151129211814) do
+ActiveRecord::Schema.define(version: 20151205231736) do
 
   create_table "carts", force: :cascade do |t|
     t.integer  "org_person_id",   limit: 4
@@ -255,5 +255,20 @@ ActiveRecord::Schema.define(version: 20151129211814) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "votes", force: :cascade do |t|
+    t.integer  "votable_id",   limit: 4
+    t.string   "votable_type", limit: 255
+    t.integer  "voter_id",     limit: 4
+    t.string   "voter_type",   limit: 255
+    t.boolean  "vote_flag",    limit: 1
+    t.string   "vote_scope",   limit: 255
+    t.integer  "vote_weight",  limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "votes", ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope", using: :btree
+  add_index "votes", ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope", using: :btree
 
 end

@@ -73,6 +73,38 @@ class OrgProductsController < ApplicationController
 		redirect_to org_products_path
 	end
 
+	def vote_product
+		vote = params[:vote]
+		@product = OrgProduct.find_by_id(params[:id])
+		@user = OrgPerson.find_by_id(current_org_person.id)
+		if vote == "upvote"
+			# User disliked product, but clicked upvote, so undislike and like the product
+			if @user.voted_down_on? @product
+				@product.undisliked_by @user
+				@product.liked_by @user
+			# User liked product, but clicked upvote, so unlike the product
+			elsif @user.voted_up_on? @product
+				@product.unliked_by @user
+			# User likes product for first time
+			else
+				@product.liked_by @user
+			end	
+		elsif vote == "downvote"
+			# User liked product, but clicked downvote, so unlike and dislike the product
+			if @user.voted_up_on? @product
+				@product.unliked_by @user
+				@product.disliked_by @user
+			# User disliked product, but clicked downvote, so undislike the product
+			elsif @user.voted_down_on? @product
+				@product.undisliked_by @user
+			# User dislikes product for first time
+			else
+				@product.disliked_by @user
+			end
+		end
+		true
+	end
+
 	private
 
 	def get_tax_details
