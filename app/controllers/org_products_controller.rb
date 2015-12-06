@@ -12,6 +12,34 @@ class OrgProductsController < ApplicationController
 	end
 
 	def show
+		@productInfo = OrgProduct.find_by_id(params['id'])
+		@category = TypCategory.find_by_id(@productInfo.typ_category_id).name
+		@subcategory = TypSubcategory.find_by_id(@productInfo.typ_subcategory_id).name
+		@contactInfo = OrgContact.find_by_org_company_id(@productInfo.org_company.id)
+		@currency = Money.new(@contactInfo.typ_country.currency_code).currency
+		session[:currency] = @currency
+		if current_org_person
+			@cart = Cart.where(org_person_id: current_org_person.id, org_product_id: @productInfo.id)
+			if @cart.empty?
+				@cart ||= session[:cart][@productInfo.id.to_s] # Check whether we saved a session variable for this item
+				if !@cart.empty? # There was a session variable for this item, attach it to this users cart
+					Cart.create(org_person_id: current_org_person.id,
+						org_product_id: @cart["id"],
+						name: @cart["title"],
+						price: @cart["price"].to_f,
+						grocer: @cart["grocer"],
+						quantity: @cart["quantity"],
+                        weight_in_grams: @cart["weight"],
+                        expiry_date: @cart["expiry"])
+					session[:cart][@productInfo.id.to_s] = nil # Clean out the session cart
+				end
+			end
+		else
+			@cart ||= session[:cart]
+			if @cart.nil? # This makes sure that @cart is a hash no matter what
+				@cart = Hash.new # The template needs a hash or it'll throw an error.
+			end
+		end
 	end
 
 	def new
