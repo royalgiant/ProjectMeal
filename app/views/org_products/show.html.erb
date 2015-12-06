@@ -1,0 +1,48 @@
+<div class="col-md-9 col-md-offset-2 main">
+	<% provide(:title, @productInfo.name) %>  
+	<div class="col-md-12">
+		<div class="col-md-12" id="prodInfo">
+			<div>
+		        <% if !@productInfo["image"].blank? %>
+		          <%= image_tag @productInfo.image_url(:medium).to_s, :class =>"displayImage"%>  
+		        <% end %>
+	      	</div>
+	      	<h4 id="title"><%= @productInfo.name%></h4>
+	      	<span><%= hidden_field_tag 'id', @productInfo.id%></span>
+	      	<div class="grocer">Grocer: <span><%= @productInfo.org_company.name%></span></div>
+	      	<div>Category: <span><%= @category%></span></div>
+      		<div>Subcategory: <span><%= @subcategory%></span></div>
+      		<div class="price">Price: <%= @currency.symbol %><span><%= number_with_precision(@productInfo.price, precision: 2)%></span></div>
+      		<% if @productInfo.weight_in_grams != 0 %>
+        		<div id="wig">Weight in Grams: <span><%= @productInfo.weight_in_grams%> or <%= number_with_precision((@productInfo.weight_in_grams/1000.00), precision: 2)%> kg</span></div>
+      		<% else %>
+        		<div id="wig" class="hidden">Weight in Grams: <span><%= @productInfo.weight_in_grams %></span> grams</div>
+      		<% end %>
+      		<% if @productInfo.available_quantity > 150 %>
+        		<div id="aq" class="hidden">Approx. Available Quantity: <span><%= @productInfo.available_quantity%></span></div>
+     		<% else %>
+        		<div id="aq">Approx. Available Quantity: <span><%= @productInfo.available_quantity %></span></div>
+      		<% end %>
+      		<% if @productInfo.expiry_date.to_date < (Date.today + 60.days)%>
+        		<div class="expiry">Expiry Date: <i><%= @productInfo.expiry_date.to_date.to_formatted_s(:long_ordinal)%></i></div>
+      		<% else %>
+        		<div class="expiry hidden">Expiry Date: <i><%= @productInfo.expiry_date.to_date.to_formatted_s(:long_ordinal)%></i></div>
+      		<% end %>
+      		<div>Description: <span><%= simple_format(@productInfo.description, {:class=>"desc_format"}, wrapper_tag: "p")%></span></div>
+		</div>
+		<% if @productInfo.online_order_available == true %>
+      		<div class="col-sm-3 quantity-box">
+        		<%= render :partial => "layouts/additem", locals: {product: @productInfo, page: "org_products_show"} %>
+      		</div> 
+    	<% end %> 
+		<% if current_org_person %>
+      	<% if @productInfo.online_order_available == true %> <!-- Some funky things here where the additem and votebutton divs' presence affect each other -->
+        		<div class="btn-group quantity-box">
+      		<% else %>
+        		<div class="col-sm-3 btn-group quantity-box">
+      		<% end %>
+        		<%= render :partial => "layouts/votebuttons", locals: {product: @productInfo} %>
+      		</div>
+    	<% end %>
+	</div>
+</div>
