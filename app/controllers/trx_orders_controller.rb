@@ -1,0 +1,2 @@
+class TrxOrdersController < ApplicationController
+end

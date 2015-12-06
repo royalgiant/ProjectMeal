@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   resources :org_people
   resources :org_companies
   resources :org_products
+  resources :trx_orders
   root "catalogues#index"
 
   match '/org_register', to:'org_companies#new', via: 'get'

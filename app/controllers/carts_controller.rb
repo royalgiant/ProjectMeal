@@ -108,4 +108,14 @@ class CartsController < ApplicationController
 		end
 		render nothing:true
 	end
+
+	def destroy
+		# Delete the item from the cart
+		if current_org_person
+			Cart.destroy(params[:id])
+		else
+			session[:cart].delete(params[:id])
+		end
+		redirect_to carts_path # Redirect to the shopping cart
+	end
 end
