@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   post 'org_people/edit_position/' => 'org_people#edit_position', :to => "org_people_edit_position"
   post 'org_people/remove_from_company/' => 'org_people#remove_from_company', :to => "org_people_remove_from_company"
 
+  post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

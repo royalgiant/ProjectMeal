@@ -1,4 +1,4 @@
-<div class="col-md-6 col-md-push-3 form-margin">
+<div class="col-md-6 col-md-push-3 form-margins">
   <%= provide(:title, "Search")%>
   <center><h1>Search For Food or Grocer</h1></center>
   <%= form_tag root_path, :class => "input-group", :method => :get do %>
@@ -31,7 +31,7 @@
               <h4 id="title"><%= link_to product.name, product %></h4>
               <span><%= hidden_field_tag 'id', product.id %></span>
               <span><%= hidden_field_tag 'tax', product.tax_amount %></span>
-              <div class="price"> <%= @currency.symbol %><span><%= number_with_precision(product.price, precision: 2)%></span></div>
+              <div class="price">Price: <%= @currency.symbol %><span><%= number_with_precision(product.price, precision: 2)%></span></div>
               <div class="grocer">Grocer: <span><%= link_to product.org_company.name, org_companies_company_profile_path(product.org_company.id)%></span></div>
               <% if product.weight_in_grams != 0%>
                 <div id="wig">Grams Per Item: <span><%= product.weight_in_grams %></span> grams or <%= number_with_precision((product.weight_in_grams/1000.00), precision: 2)%> kg</div>
@@ -51,7 +51,7 @@
             </div>
             <% if product.online_order_available == true %>
               <div class="col-md-2 quantity-box">
-                <% render :partial => "layouts/additem", locals: {product: product, page: "catalogue_index"}%>
+                <%= render :partial => "layouts/additem", locals: {product: product, page: "catalogue_index"}%>
               </div>
             <% end %>
             <% if current_org_person %>
