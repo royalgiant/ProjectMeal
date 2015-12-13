@@ -1,5 +1,5 @@
 class CartsController < ApplicationController
-
+	# Shows all the items client has ordered in the shopping cart
 	def index
 		@org_products = Array.new
 		@currency = Money.new(1, session[:currency]["iso_code"]).currency
@@ -107,6 +107,12 @@ class CartsController < ApplicationController
 			}
 		end
 		render nothing:true
+	end
+
+	def add_delivery_method
+		session[:delivery_method] = nil
+		session[:delivery_method] = params[:deliveryMode]
+		render nothing:true 
 	end
 
 	def destroy

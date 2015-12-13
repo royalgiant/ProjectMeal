@@ -11,8 +11,8 @@ div.delivery_options{
 	display:none;
 }
 
-#deleteProductFromSession {
-	a {
+#deleteProductFromSession, .checkouts{
+	a, a:hover {
 		text-decoration: none;
 		text-color: white;
 		color: white;
