@@ -84,6 +84,17 @@ class TrxOrdersController < ApplicationController
 		return h
 	end
 
+	# Calculates projectmeal fee for one kind of item in a transaction
+	def projectmeal_fee(subtotal, product)
+		if !product.org_company.typ_fee_id.nil?
+			fee = TypFee.find_by_id(product.org_company.typ_fee_id) # Look up what fee is charged with this vendor 
+			projectmeal_fee = subtotal * fee.fee_percentage # calculate what fee we charge
+		else
+			projectmeal_fee = subtotal * 0.05
+		end
+		return projectmeal_fee.round(2).to_f # return the fee
+	end
+
 	def signed_in_user
     	unless signed_in?
         	store_location
