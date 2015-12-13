@@ -35,7 +35,50 @@ class TrxOrdersController < ApplicationController
 
 	# Get subtotal, grabs the total of the cart and sanitizes the session variables
 	def get_subtotal(cart_array)
-		
+		@cart = price_session_sanitization(cart_array)
+		@total = 0
+		if @cart.blank? # do nothing
+		else # Add the price of each item * its quantity to the running total
+			@cart.each do |price| 
+	            @total = @total + (price["price"].to_f * price["quantity"].to_f)
+	        end
+	    end
+	    return @total # return the subtotal
+	end
+
+	def get_total_tax(cart_array)
+		@cart = price_session_sanitization(cart_array)
+		@total_tax = 0
+		if @cart.blank? #do nothing...	
+		else # Add the price of each time * it's quantity to the running total
+			@cart.each do |price| 
+				if !price["tax_amount"].nil?
+					@total_tax = @total_tax + (price["price"].to_f * price["quantity"].to_f)*(price["tax_amount"]/100)
+				end
+			end
+		end
+		return @total_tax # return the total_tax
+	end
+
+	def price_session_sanitization(cart_array)
+		# Check if we have a cart_array passed in, if we do, use that, if not, then do a DB call
+		if cart_array.empty?
+			@cart = Cart.where(org_person_id: current_org_person.id) # Grab whatever is in the cart
+		else
+			@cart = cart_array
+		end
+		array = Array.new # Make a new array for sanitization
+		# Go through the cart and collect the ids of each item, so we can get the price from the DB
+		# to ensure that session variables like price were not manipualted
+		@cart.each do |id|
+			array << id[0].to_i
+		end
+		@products = OrgProduct.where(id:array) # Select the products from the ids
+		# Each product, grab the price from the db and assign to @cart variable
+		@products.each do |product|
+			@cart[product.id.to_s]["price"] = product["price"].to_s
+		end
+		return @cart
 	end
 
 	# Calcuales total projectmeal fee for all items in a transaction
