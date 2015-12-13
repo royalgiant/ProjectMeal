@@ -33,6 +33,22 @@ class TrxOrdersController < ApplicationController
 
 	private
 
+	# Calcuales total projectmeal fee for all items in a transaction
+	def total_projectmeal_fee
+		session[:svc] = stripe_vendor_charges # Might as well set the session
+		fee = 0
+		session[:svc].each do |key, array|
+			fee = fee + array[:fee]
+		end
+		return fee
+	end
+
+	# This function breaks down our cart and tallies up the total according to vendor
+	# It returns an array [stripe_user_id, total]
+	def stripe_vendor_charges
+		
+	end
+
 	def signed_in_user
     	unless signed_in?
         	store_location
