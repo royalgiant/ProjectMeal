@@ -33,6 +33,11 @@ class TrxOrdersController < ApplicationController
 
 	private
 
+	# Get subtotal, grabs the total of the cart and sanitizes the session variables
+	def get_subtotal(cart_array)
+		
+	end
+
 	# Calcuales total projectmeal fee for all items in a transaction
 	def total_projectmeal_fee
 		session[:svc] = stripe_vendor_charges # Might as well set the session
