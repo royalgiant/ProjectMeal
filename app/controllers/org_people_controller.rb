@@ -53,6 +53,10 @@ class OrgPeopleController < ApplicationController
 		contact_info.update(org_company_id: nil)
 	end
 
+	# This connects the company to a bank account in their country, only accessible by the COO
+	def stripe_settings
+	end
+
 	private 
 		def update_person_params
 			params.require(:org_person).permit(org_contacts_attributes: [:address1, :address2,

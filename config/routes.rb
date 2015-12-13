@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   
-
+  get 'org_people/stripe_settings/' => 'org_people#stripe_settings', :to => "org_people_stripe_settings"
   post 'org_people/edit_position/' => 'org_people#edit_position', :to => "org_people_edit_position"
   post 'org_people/remove_from_company/' => 'org_people#remove_from_company', :to => "org_people_remove_from_company"
 

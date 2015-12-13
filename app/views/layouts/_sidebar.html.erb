@@ -7,7 +7,7 @@
 	    <% end %>
 	    <!-- Only the COO, the operations chief, will be able to link his company to a bank account. -->
 	    <% if current_org_person.typ_position_id == 1%>
-	      <li class="sidebar_stripe_settings"><%= link_to "Payment Settings", "#" %></li>
+	      <li class="sidebar_stripe_settings"><%= link_to "Payment Settings", org_people_stripe_settings_path %></li>
 	    <% end %>  
   	</ul>
 
