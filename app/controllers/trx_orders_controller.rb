@@ -10,7 +10,7 @@ class TrxOrdersController < ApplicationController
 			session[:cart] = nil # Empty out the session
 			if !@cart.nil? # If the cart is not empty
 				@cart.each do |c| # Create each item in the session cart in the DB and attach to current user.
-					Cart.create(org_person_id: current_org_person.id
+					Cart.create(org_person_id: current_org_person.id,
 								org_product_id: c[1]["id"],
 								name: c[1]["title"],
 								tax_amount: c[1]["tax_amount"],
@@ -19,7 +19,7 @@ class TrxOrdersController < ApplicationController
 			                    quantity: c[1]["quantity"],
 			                    weight_in_grams: c[1]["weight"],
 			                    expiry_date: c[1]["expiry"])
-					)
+				
 				end 
 			end
 		end
@@ -105,6 +105,7 @@ class TrxOrdersController < ApplicationController
 		@products.each do |product|
 			# We need to find the COO, to get his stripe_user_id
 			person = OrgPerson.where(org_company_id: product.org_company_id, typ_position_id: 1).where.not(stripe_user_id: nil)
+			c = @cart_items.find{ |item| item.org_product_id == product.id } # This is to match the product to the cart item to get "c"
 			
 			if !person.empty?
 				c = @cart_items.find{ |item| item.org_product_id == product.id } # This is to match the product to the cart item to get "c"

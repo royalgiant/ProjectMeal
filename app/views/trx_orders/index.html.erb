@@ -1,0 +1,86 @@
+<div class="col-md-6 col-md-push-3">
+  <%= provide(:title, "Checkout") %>
+  <center><h1>Checkout</h1></center>
+</div>
+
+<div class="col-md-9 col-md-offset-2 main">
+<% if  @cart.nil? %>
+	<h3 class="col-md-9 col-md-offset-2 main">There are no items in your cart to checkout.</h3>
+<% else %>
+	<ul class="catalogue">
+		<li>
+			<div class="row">
+				<h4 class="col-md-3" id="prodInfo">
+		            Order Details
+		        </h4>
+		        <h4 class="col-md-3 col-md-push-1">
+		        	Quantity
+		        </h4>
+		        <h4 class="col-md-3 col-md-push-1">
+		        	Tax
+		        </h4>
+		        <h4 class="col-md-3 col-md-push-1">
+		        	Total
+		        </h4>
+			</div>
+		</li>
+		<% @cart.each do |product| %>
+		<li>
+			<div class="row">
+				<div class="col-md-3" id="co_prodInfo">
+					<span>Product: <%= product["name"]%></span>
+					<span>Price: <%= @currency.symbol%><%= number_with_precision(product["price"], precision: 2)%></span>
+					<span>Grocer: <%= product["grocer"]%></span>
+					<% if product["weight_in_grams"] != 0 %>
+	                	<span>Weight in grams: <%= product["weight_in_grams"]%> grams</span>
+	              	<% end %>
+	              	<% if product["expiry_date"].to_date < (Date.today + 60.days)%>
+                		<span>Expiry Date: <%= product["expiry_date"].to_date.to_formatted_s(:long_ordinal)%></span>
+              		<% end %>
+              		<span>Mode of Transport: <%= session[:delivery_method].capitalize%></span>
+				</div>
+				<div class="col-md-3 col-md-push-1">
+					<span id="co_qty"><%= product["quantity"]%></span>
+				</div>
+				<div class="col-md-3 col-md-push-1">
+					<% if product["tax_amount"].nil? %>
+						<span id="co_qty">0.00</span>
+					<% else %>
+						<span id="co_qty"><%= number_with_precision((product["price"].to_f * product["quantity"].to_f) * (product["tax_amount"]/100), precision:2)%></span>
+					<% end %>
+				</div>
+				<div class="col-md-3 col-md-push-1">
+               		<%= @currency.symbol%><%= number_with_precision(product["price"].to_f * product["quantity"].to_f, precision: 2)%>
+           	 	</div>
+			</div>
+		</li>
+		<% end %>
+	</ul>
+	<div class="row">
+		<h5 class="col-md-4" id="subtotal">Subtotal</h5>
+		<span class="col-md-4 col-md-push-6"><%= @currency.symbol%><%= number_with_precision(@subtotal, precision: 2)%></span>
+	</div>
+	<div class="row">
+		<h5 class="col-md-4" id="subtotal">Total Tax</h5>
+		<span class="col-md-4 col-md-push-6"><%= @currency.symbol%><%= number_with_precision(@total_tax, precision: 2)%></span>
+	</div>
+	<div class="row">
+      <h5 class="col-md-4" id="subtotal">ProjectMeal Order Request Fee</h5>
+      <span class="col-md-4 col-md-push-6"><u><%= @currency.symbol%><%= number_with_precision(@fee, precision: 2)%></u></span>
+    </div>
+    <div class="row">
+      <h4 class="col-md-4" id="subtotal">Total</h4>
+      <span class="col-md-4 col-md-push-6"><%= @currency.symbol%><%= number_with_precision(@subtotal+@fee+@total_tax, precision: 2)%></span>
+    </div>
+    <div class="row buy col-md-4"> 
+    	<%= form_tag trx_orders_stripe_path do%>
+	        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+	          data-key=<%= ENV["STRIPE_PUBLISHABLE_KEY"]%>
+	          data-description="Cart's total"
+	          data-amount=<%=((@subtotal+@fee+@total_tax).round(2)*100).to_i%>
+	          data-billingAddress="true"
+	          data-shippingAddress="true">
+	        </script>
+	     <% end %>
+    </div>
+<% end %>
