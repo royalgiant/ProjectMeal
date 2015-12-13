@@ -46,7 +46,42 @@ class TrxOrdersController < ApplicationController
 	# This function breaks down our cart and tallies up the total according to vendor
 	# It returns an array [stripe_user_id, total]
 	def stripe_vendor_charges
-		
+		@cart_items = Cart.where(org_person_id: current_org_person.id)  # Grab whatever is in the cart
+		array = Array.new  # Make a new array for holding ids
+		@cart_items.each do |id| # Throw all id's into the array
+			array << id[:org_product_id].to_i
+		end
+		@products = OrgProduct.where(id:array) # Find all the products with the id array
+
+		h = Hash.new  # Make a new hash for holding ids
+		@products.each do |product|
+			# We need to find the COO, to get his stripe_user_id
+			person = OrgPerson.where(org_company_id: product.org_company_id, typ_position_id: 1).where.not(stripe_user_id: nil)
+			
+			if !person.empty?
+				c = @cart_items.find{ |item| item.org_product_id == product.id } # This is to match the product to the cart item to get "c"
+				subtotal = c.price * c.quantity # calculate subtotal
+				fee = projectmeal_fee(subtotal, product) #calculate the projectmeal fee
+				tax = c.tax_amount.nil? ? 0 : subtotal * (c.tax_amount/100) # calculate any taxes
+				if !h[person[0][:stripe_user_id]].blank? # If the stripe_user_id already existed (i.e. selling 2 different items by same vendor)
+					h[person[0][:stripe_user_id]] = {total: (h[person[0][:stripe_user_id]][:total] + (subtotal+fee+tax)).round(2).to_f,
+													fee: (h[person[0][:stripe_user_id]][:fee] + fee).round(2).to_f,
+													tax: (h[person[0][:stripe_user_id]][:tax] + tax).round(2).to_f,
+													stripe_id: person[0][:stripe_user_id]
+										}
+				else # first item being sold by vendor, add the vendor to the list
+					h[person[0][:stripe_user_id]] = { total: 0 + (subtotal+fee+tax).round(2).to_f, 
+													  fee: fee.round(2).to_f,
+													  tax: tax.round(2).to_f,
+													  stripe_id: person[0][:stripe_user_id]
+										}
+				end
+			else
+				Cart.destroy(c.id)
+				flash[:warning] = "One or more of the items checked out have been removed because orders are not being taken for those items at the moment."
+			end
+		end
+		return h
 	end
 
 	def signed_in_user
