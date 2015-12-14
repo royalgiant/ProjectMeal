@@ -55,6 +55,13 @@ class OrgPeopleController < ApplicationController
 
 	# This connects the company to a bank account in their country, only accessible by the COO
 	def stripe_settings
+		@manager = StripeManaged.new(current_org_person)
+		if !current_org_person.stripe_account_status.nil?
+			@charges = [ 'Charges', current_org_person.stripe_account_status['charges_enabled'] ]
+			@transfers = [ 'Transfers', current_org_person.stripe_account_status['transfers_enabled'] ]
+			@dob = @manager.legal_entity.dob
+			@date_selected = Date.new(@dob.year, @dob.month, @dob.day) rescue nil
+		end
 	end
 
 	private 
