@@ -1,0 +1,26 @@
+<div class="col-md-11">
+<% if current_org_person.managed?%>
+	<center>
+		<h2>Stripe Account Management</h2>
+		<p>Account Type: <strong>Managed</strong></p>
+
+		<!-- Current account status, whether the account can make charges or can receive transfers -->
+		<div class="account-status">
+			Status:
+			<table>
+				<% [@charges, @transfers].each do |text, yn| %>
+					<tr>
+						<td>
+							<span class="label <%= yn ? 'label-primary' : 'label-danger'%>">
+								<span class="fa <%= yn ? 'fa-check' : 'fa-times'%>"></span>
+								<%= text %>
+							</span>	
+						</td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+	</center>
+	<!-- If we need more information from this user to keep their account in good standing -->
+<% end %>
+</div>

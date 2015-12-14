@@ -12,7 +12,7 @@
   </div>
   <hr>
   <div>
-  	<% if current_org_person.connect? %>
+  	<% if current_org_person.connected? %>
   		<%= render :partial => 'layouts/stripeSettings' %>
 	<% else %>
 		<%= render :partial => 'layouts/stripeConnect'%>
