@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
 
   post 'trx_orders/stripe/' => 'trx_orders#stripe', :to =>"trx_orders_stripe"
+
+  # - Stripe routes
+  # - Create accounts
+  post '/connect/managed' => 'stripe#managed', as: 'stripe_managed'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

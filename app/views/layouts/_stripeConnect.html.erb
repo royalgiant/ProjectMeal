@@ -1,0 +1,15 @@
+<% if Stripe::Account.retrieve('self').country.in? StripeManaged::ALLOWED %>
+<div class="col-md-4 col-md-offset-4" id="stripe-managed">
+	<center>
+		<h3>Managed</h3>
+		<p>Create a managed Stripe account in:</p>
+	</center>
+	<%= form_tag stripe_managed_path, method: :post do%>
+		<%= select_tag 'country', options_for_select(StripeManaged::COUNTRIES.collect {|c| [ c[:name], c[:code] ] }), {:class => 'form-control'} %>
+		<label class="tos">
+			<%= check_box_tag 'tos'%> I accept the <a href='https://stripe.com/connect/account-terms', target="_blank">Stripe Connected Account Agreement</a>
+		</label>
+		<%= submit_tag "Create", :class => "btn btn-primary disabled" %>
+	<% end %>
+</div>
+<% end %>

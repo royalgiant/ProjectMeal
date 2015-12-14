@@ -1,0 +1,21 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+<div class="col-md-10 col-md-offset-2 main">
+  <% provide(:title, "Payment Settings") %>
+  <center><h1>Payment Settings</h1></center>
+  <div class="payment_settings">
+  	<center>
+  		<p>We use Stripe to process payments. It is the most effective and efficient way for payments to be transferred to your bank account.</p>
+  		<p>Please fill out the form below, so we can create an account for you and pay you!</p>
+  	</center>
+  </div>
+  <hr>
+  <div>
+  	<% if current_org_person.connect? %>
+  		<%= render :partial => 'layouts/stripeSettings' %>
+	<% else %>
+		<%= render :partial => 'layouts/stripeConnect'%>
+	<% end %>
+  </div>
+ </div>
