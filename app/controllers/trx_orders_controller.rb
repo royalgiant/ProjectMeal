@@ -30,6 +30,32 @@ class TrxOrdersController < ApplicationController
 		@currency = Money.new(1, session[:currency]["iso_code"]).currency # Gives us the currency symbol to display in the view
 	end
 
+	def stripe
+		billing = {
+			name: params["stripeBillingName"],
+			address: {
+				line1: params["stripeBillingAddressLine1"],
+				postal_code: params["stripeBillingAddressZip"],
+				city: params["stripeBillingAddressCity"],
+				region: params["stripeBillingAddressState"],
+				country: params["stripeBillingAddressCountryCode"],
+			}	
+		}
+
+		shipping = {
+			name: params["stripeShippingName"],
+			address: {
+				line1: params["stripeShippingAddressLine1"],
+				postal_code: params["stripeShippingAddressZip"],
+				city: params["stripeShippingAddressCity"],
+				state: params["stripeShippingAddressState"],
+				country: params["stripeShippingAddressCountryCode"],
+			}
+		}
+
+		Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+	end
+
 
 	private
 
@@ -106,7 +132,7 @@ class TrxOrdersController < ApplicationController
 			# We need to find the COO, to get his stripe_user_id
 			person = OrgPerson.where(org_company_id: product.org_company_id, typ_position_id: 1).where.not(stripe_user_id: nil)
 			c = @cart_items.find{ |item| item.org_product_id == product.id } # This is to match the product to the cart item to get "c"
-			
+
 			if !person.empty?
 				c = @cart_items.find{ |item| item.org_product_id == product.id } # This is to match the product to the cart item to get "c"
 				subtotal = c.price * c.quantity # calculate subtotal
