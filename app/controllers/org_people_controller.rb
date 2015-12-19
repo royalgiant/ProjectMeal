@@ -1,5 +1,9 @@
 class OrgPeopleController < ApplicationController
+	before_action :signed_in_user, only: [:edit, :update, :stripe_settings]
+  	before_action :correct_user,   only: [:edit, :update]
+
 	def edit
+		# All the setup that is needed to build the edit page view
 		@person = OrgPerson.find(params[:id])
 		@contactInfo = OrgContact.find_or_initialize_by(org_person_id: params[:id])
 		@contactInfo[:email] = current_org_person.email
@@ -66,7 +70,7 @@ class OrgPeopleController < ApplicationController
 	# This updates the necessary information required by stripe
 	def stripe_update_settings
 		manager = current_org_person.manager
-		manager.update_accounts! params: params
+		manager.update_account! params: params
 		redirect_to org_people_stripe_settings_path
 	end
 	private 
@@ -75,4 +79,24 @@ class OrgPeopleController < ApplicationController
         	:city, {typ_countries: :id}, {typ_regions: :id}, {org_company: :id}, :postal_code, :email, 
         	:business_number, :cell_number, :org_person_id, :avatar])
 		end
+
+		# Before filters
+
+	    def signed_in_user
+	      unless signed_in?
+	        store_location
+	        redirect_to signin_url, flash: {warning: "Please sign in."}
+	      end
+	    end
+
+	    # Checks to see if the current user is actually the user this page is suppose to show
+    	# We don't want a person to type in the user of someone else in the link and edit their info
+	    def correct_user
+	      @user = OrgPerson.find_by_id(params[:id]) 
+	      if !@user.nil? && (current_org_person.id == @user.id) #If user is found, go to edit page, else go to sign in
+	      else
+	        flash[:danger] = "The request cannot be fulfilled."
+	        redirect_to(signin_path)
+	      end
+	    end
 end
