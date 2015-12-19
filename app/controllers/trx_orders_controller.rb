@@ -145,6 +145,43 @@ class TrxOrdersController < ApplicationController
 	# Reduce the quantity for the specific items bought in the db and insert the bought items 
 	# into trx_order_items table with trx_order_id
 	def product_sold(order, sa)
+		@cart_item = Cart.where(org_person_id: current_org_person.id)  # Grab whatever is in the cart
+		array = Array.new  # Make a new array for holding ids
+		@cart_items.each do |id| # Throw all id's into the array
+			array << id[:org_product_id].to_i
+		end
+
+		@products = OrgProduct.where(id:array) # Find all the products with the id array
+		# For each product
+		@products.each_with_index do |product, index|
+
+			q = @cart_items.find{ |item| item.org_product_id == product.id}
+			#Update the quantity available in OrgProduct after the sale and save.
+			product.available_quantity = product.available_quantity.to_i - q.quantity
+			product.save
+			# Create the hash for insert into trx_order_items
+			order_item = {
+				name: product.name,
+				description: product.description,
+				weight_in_grams: product.weight_in_grams,
+				price: product.price,
+				available_quantity: product.available_quantity,
+				quantity: q.quantity,
+				expiry_date: product.expiry_date,
+				image: product.image,
+				delivery_status: 0,
+				org_product_id: product.id,
+				typ_category_id: product.typ_category_id,
+				typ_subcategory_id: product.typ_subcategory_id,
+				trx_order_id: order.id, 
+				org_company_id: product.org_company_id,
+				shipping_address_id: sa.id,
+				net_amount: (product.price * q.quantity), # We add fees and taxes on top of the price, so the net amount is always (price + tax + fees - tax - fees)
+				tax_amount: (product.price *  q.quantity)*(product.tax_amount/100) # Taxes paid
+			}
+			item = TrxOrderItem.find_or_initialize_by(trx_order_id: order.id, shipping_address_id: sa.id, org_product_id: product.id) #Create the item
+			item.update(order_item)
+		end
 	end
 
 	# Get subtotal, grabs the total of the cart and sanitizes the session variables
