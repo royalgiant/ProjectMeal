@@ -93,11 +93,59 @@ class TrxOrdersController < ApplicationController
 			end
 		end
 
-		
+
+		if !stripeTransactions.empty? # If our stripeTransactions array is not empty, we made some transactions
+			@orderInfo = { # Gather the following information
+				org_company_id: current_org_person.org_company_id.nil? nil : current_org_person.org_company_id,
+				bill_to_contact_id: current_org_person.id,
+				purchased_at: Time.now,
+				total_amount: amount_total,
+				transport_method: session[:delivery_method]
+			}
+			@order = TrxOrder.create(@orderInfo)
+			StripeTransaction.where(id:stripeTransactions).update_all(trx_order_id: @order.id) #Update all the records of stripeTransactions with trx_order_id: @order.id
+			trx_order_fee = {
+				fee_amount: total_projectmeal_fee, #get the fees of all stripe_transcactions for this order
+				trx_order_id: @order.id
+			}
+			@trx_order_fee = TrxOrderFee.create(trx_order_fee)
+			@shipAddress = {
+				first_name:params["stripeShippingName"],
+				last_name:params["stripeShippingName"],
+				address1: params["stripeShippingAddressLine1"],
+				city: params["stripeShippingAddressCity"],
+				region: params["stripeShippingAddressState"],
+				postal_code: params["stripeShippingAddressZip"],
+				country: params["stripeShippingAddressCountryCode"],
+				email: params["stripeEmail"],
+				trx_order_id: @order.id
+			}
+			@shipInfo = ShippingAddress.find_or_craete_by!(@shipAddress)
+			@order.update(ship_to_contact_id: @shipInfo.id, trx_order_fee_id: @trx_order_fee.id) #Update the order with the new shipping address id
+		end
+
+		if !@shipInfo.nil?
+			product_sold(@order, @shipInfo)
+			session.delete(:svc) # Clean up sessions
+			redirect_to action: "stripe_success", id: @order.id
+		else
+			render :index
+		end
+		rescue Stripe::CardError => expiry_date
+			flash[:error] = e.message
+			redirect_to trx_order_path
+	end
+
+	# Grabs all the necessary data and presents an invoice display page after purchases
+	def stripe_success
 	end
 
 
 	private
+	# Reduce the quantity for the specific items bought in the db and insert the bought items 
+	# into trx_order_items table with trx_order_id
+	def product_sold(order, sa)
+	end
 
 	# Get subtotal, grabs the total of the cart and sanitizes the session variables
 	def get_subtotal(cart_array)
