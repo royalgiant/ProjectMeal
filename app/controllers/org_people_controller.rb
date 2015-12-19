@@ -63,7 +63,12 @@ class OrgPeopleController < ApplicationController
 			@date_selected = Date.new(@dob.year, @dob.month, @dob.day) rescue nil
 		end
 	end
-
+	# This updates the necessary information required by stripe
+	def stripe_update_settings
+		manager = current_org_person.manager
+		manager.update_accounts! params: params
+		redirect_to org_people_stripe_settings_path
+	end
 	private 
 		def update_person_params
 			params.require(:org_person).permit(org_contacts_attributes: [:address1, :address2,
