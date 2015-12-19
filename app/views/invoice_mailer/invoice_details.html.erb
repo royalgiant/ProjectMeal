@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag "projectmeal" %>
+<div class="col-md-6 col-md-push-3" id="invoice-header">
+	<center><h1>Purchase Order #<%= @order[:id]%></h1></center>
+	<hr>
+
+	<div class="col-md-2" id="email_invoice">
+		<i><u>Sold To</u></i>
+		<% if !@company.nil?%>
+			<b id="company"><%= @company.name %></b>
+		<% else %>
+			<b id="company"><%= @contact.first_name + " " + @contact.last_name %></b>
+		<% end %>
+	</div>
+	<div class="col-md-2 col-md-offset-2" id="email_invoice">
+		<%if @order.transport_method == 'delivery'%>
+			<i><u>Ship To</u></i>
+			<span><b>Address:</b> <%= @shipAddress[:address1]%></span>
+			<span><b>City:</b> <%= @shipAddress[:city]%></span>
+			<span><b>Postal Code:</b> <%= @shipAddress[:postal_code]%></span>
+			<span><b>Country:</b> <%= @shipAddress[:country]%></span>
+		<% else %>
+			<b><i><u>These items will be picked up at their respective stores</u></i></b>
+		<% end %>
+	</div>
+</div>
+
+<div class="col-md-6 main" id="invoice">
+	<%= render :partial => "layouts/invoicetables" %>
+</div>

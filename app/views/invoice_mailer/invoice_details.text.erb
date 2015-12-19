@@ -1,0 +1,52 @@
+
+Purchase Order #<%= @order[:id]%>
+==================================
+
+Sold To
+=======
+<% if !@company.nil?%>
+<%= @company.name %>
+<% else %>
+<%= @contact.first_name + " " + @contact.last_name %>
+<% end %>
+
+<%if @order.transport_method == 'delivery'%>
+Ship To
+=======
+Address: <%= @shipAddress[:address1]%>
+City: <%= @shipAddress[:city]%>
+Postal Code: <%= @shipAddress[:postal_code]%>
+Country: <%= @shipAddress[:country]%>
+<% else %>
+These items will be picked up at their respective stores
+<% end %>
+
+Your purchased items:
+=====================
+
+<% @purchase_items.each_with_index do |item, index|%>
+From Grocer: <%= item.OrgProduct.org_company.name%>
+Item: <%= item[:name]%>
+Quantity: <%= item[:quantity]%>
+Total: <%= @currency.symbol%><%= number_with_precision(item[:price].to_f * item[:quantity].to_f, precision:2)%>	
+<% end %>
+
+Fees, Delivery Costs, and Taxes
+==============
+MealShelf Fee: <%= @currency.symbol%><%= number_with_precision(@ps_fee.fee_amount, precision: 2)%>
+Total Taxes: <%= @currency.symbol%><%= number_with_precision(@total_tax, precision: 2)%>
+
+Total Cost
+==========
+Total Cost: <%= @currency.symbol%><%= number_with_precision(@order.total_amount/100, precision:2)%>
+
+Contact Details
+===============
+Full name: <%= @notification_params_name %> 
+Email: <%= @shipAddress.email%> 
+Telephone: <%= @shipAddress.telephone == true ? @shipAddress.telephone : "N/A"%> 
+
+Payment Details
+===============
+Payment status: Complete
+Payment date: <%= @order.purchased_at%> 
