@@ -54,6 +54,46 @@ class TrxOrdersController < ApplicationController
 		}
 
 		Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+
+		@customer = Stripe::Customer.create(
+			:email => params[:stripeEmail]
+			:source => params[:stripeToken]
+		)
+		stripeTransactions = Array.new # Array used so later we can update the StripeTransactions with their TrxOrder id
+		amount_total = 0 # Keep track of the total
+		session[:svc].each do |key, array|
+			token = Stripe::Token.create({:customer => @customer.id}, {:stripe_account => array['stripe_id']})
+
+			# Charge the customer instead of the card
+			charge = Stripe::Charge.create(
+				{  	:source 	=> token.id,
+					:amount 	=> (array['total']*100).to_i,
+					:description => 'Cart Purchase',
+					:currency	=> session[:currency]['iso_code'],
+					:shipping 	=> shipping,
+					:application_fee => (array['fee']*100).to_i
+				}, {:stripe_account => array['stripe_id']}
+			)
+
+			# If the charge succeeded, then record the data
+			if charge[:paid]
+				stripeCharge = {
+					txn_type: charge[:object],
+					currency: charge[:currency],
+					total_amount: charge[:amount],
+					tax_amount: array['tax']*100.to_i,
+					notification_params: charge,
+					txn_id: charge[:id],
+					status: charge[:paid],
+					description: charge[:description] 
+				}
+				amount_total = amount_total + (array['total']*100).to_i # Keep track of the total
+				@sT = StripeTransaction.create(stripeCharge) # make a record in the StripeTransactions table
+				stripeTransactions << @sT.id # push the id into the stripeTransactions array for later use
+			end
+		end
+
+		
 	end
 
 
