@@ -138,6 +138,40 @@ class TrxOrdersController < ApplicationController
 
 	# Grabs all the necessary data and presents an invoice display page after purchases
 	def stripe_success
+		@order = TrxOrder.find(params[:id])
+		@pm_fee = TrxOrderFee.find_by_id(@order.trx_order_fee_id)
+		# Only the purchaser can see this information
+		if current_org_person.id == @order.bill_to_contact_id || current_org_person.org_company_id == @order.org_company_id
+			@company = !@order.org_company_id.nil? ? OrgCompany.find(@order.org_company_id) : nil
+			@shipAddress = ShippingAddress.find_by(trx_order_id: params[:id])
+			@purchase_items = @order.TrxOrderItem.all
+			@notification_params_name = JSON.parse(@order.StripeTransaction.all[0][:notification_params])["card"]["name"]
+			@total_tax = @order.TrxOrderItem.sum(:tax_amount).to_f
+			@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
+			@contact = current_org_person
+			invoice_details_hash = { order: @order,
+				company: @company,
+				shipAddress: @shipAddress,
+				purchase_items: @purchase_items,
+				notification_params: @notification_params_name,
+				total_tax: @total_tax,
+				currency: @currency, 
+				billed_contact: @contact,
+				pm_fee: @pm_fee
+			}
+
+			Cart.destroy_all(org_person_id: current_org_person.id)
+			InvoiceMailer.invoice_details(invoice_details_hash).deliver
+			respond_to do |format|
+				format.html
+				format.pdf do 
+					render pdf: "Invoice ##{@order.id}",
+						template: "trx_orders/purchase_order.pdf.erb"
+				end
+			end
+		else
+			redirect_to root_path, flash: {warning: "You are not authorized to view this page."}
+		end
 	end
 
 

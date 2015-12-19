@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
 
   post 'trx_orders/stripe/' => 'trx_orders#stripe', :to =>"trx_orders_stripe"
+  get 'trx_orders/stripe_success/:id' => 'trx_orders#stripe_success', :to => "trx_orders_stripe_success"
+  
 
   # - Stripe routes
   # - Create accounts
