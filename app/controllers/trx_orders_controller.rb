@@ -161,7 +161,7 @@ class TrxOrdersController < ApplicationController
 			}
 
 			Cart.destroy_all(org_person_id: current_org_person.id)
-			InvoiceMailer.invoice_details(invoice_details_hash).deliver
+			InvoiceMailer.invoice_details(invoice_details_hash).deliver_now
 			respond_to do |format|
 				format.html
 				format.pdf do 
