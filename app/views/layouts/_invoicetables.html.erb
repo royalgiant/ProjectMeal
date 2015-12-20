@@ -1,0 +1,42 @@
+<table class="table table-bordered">
+	<tr>
+		<th>From Grocer</th>
+		<th>Item</th>
+		<th>Quantity</th>
+		<th>Total</th>
+	</tr>
+	<% @purchase_items.each_with_index do |item, index|%>
+		<tr>
+			<td><%= item.OrgProduct.org_company.name%></td>
+			<td><%= item[:name]%></td>
+			<td><%= item[:quantity]%></td>
+			<td><%= @currency.symbol%><%= number_with_precision(item[:price].to_f * item[:quantity].to_f, precision:2)%></td>
+			<br>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="3">ProjectMeal Fee:</td>
+		<td><%= @currency.symbol%><%= number_with_precision(@pm_fee.fee_amount, precision: 2)%></td>
+	</tr>
+	<tr>
+		<td colspan="3">Total Taxes:</td>
+		<td><%= @currency.symbol%><%= number_with_precision(@total_tax, precision: 2)%></td>
+	</tr>
+	<tr>
+		<td colspan="3">Total Cost:</td>
+		<td><%= @currency.symbol%><%= number_with_precision(@order.total_amount/100, precision:2)%></td>
+	</tr>
+</table>
+
+<div>
+	<i><u>Contact Details</u></i>
+	<span><b>Full name:</b> <%= @notification_params_name %></span> 
+	<span><b>Email:</b> <%= @shipAddress.email%></span> 
+	<span><b>Telephone:</b> <%= @shipAddress.telephone == true ? @shipAddress.telephone : "N/A"%></span> 
+</div>
+
+<div>
+	<i><u>Payment Details</u></i>
+	<span><b>Payment status:</b> Complete</span> 
+	<span><b>Payment date:</b> <%= @order.purchased_at%></span> 
+</div>
