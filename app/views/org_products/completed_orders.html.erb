@@ -1,0 +1,49 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+
+<div class="col-md-10 col-md-offset-2 main">
+	<% provide(:title, "Completed Orders") %>
+  	<center>
+  		<h1>Completed Orders</h1>
+  		<p>Here are all the completed orders between you and your customers.</p>
+  	</center>
+
+  	<% if @orders.count > 0 %>
+  		<ul class="products">
+  			<% @orders.each do |product| %>
+  				<li>
+  					<div class="col-md-2 prodImage">
+			            <% if !product["image"].blank? %>
+			              <%= image_tag product.image.to_s, :class =>"displayImage"%>
+			            <% else %>  
+			              <div class="displayImage">
+			                <i class="fa fa-question-circle photoUpload"></i>
+			                <p>Picture Unavailable</p>
+			              </div>
+			            <% end %>
+			        </div>
+			        <div class="col-md-8 org_products_index_info">
+			            <div>Food Product: <%= link_to product.name, edit_org_product_path(product.org_product_id) %></div>
+			            <div>Weight in Grams: <%= product.weight_in_grams%></div>
+			            <div>Approx. Available Quantity Left: <%= product.available_quantity%></div>
+			            <div>Price:  <%= @currency.symbol %><%= number_with_precision(product.price, precision: 2)%></div> 
+			            <div>Quantity Purchased: <%= product.quantity%></div>
+			            <div class="price">Total Price Paid:  <%= @currency.symbol %><%= number_with_precision(product.price * product.quantity, precision: 2)%></div> 
+			            <div>Expiry Date: <%= product.expiry_date.strftime("%B %d, %Y")%></div>
+			            <% name =  OrgPerson.find_by_id(product.TrxOrder.bill_to_contact_id)%>
+			            <div>Ordered By: <%= "#{name.first_name} #{name.last_name}"%></div>
+			        </div>
+			        <div class="col-md-2 delivery-status-check">
+			          	<button class="btn btn-danger delivery_status" deliveryStatus="0" orderId=<%= product.id%> type="submit">
+			          		Order Incomplete
+					    </button>
+			        </div> 
+  				</li>
+  			<% end %>
+  		</ul>
+  		<b class="total">Total Amount of All Completed Orders: <%= @currency.symbol %><%= number_with_precision(@total, precision: 2)%></b>
+  	<% else %>
+  		<center><h4>There are no completed orders by your company</h4></center>
+  	<% end %>
+</div>

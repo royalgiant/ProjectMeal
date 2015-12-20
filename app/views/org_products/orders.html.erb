@@ -35,7 +35,7 @@
 	            		<div>Ordered By: <%= "#{name.first_name} #{name.last_name}"%></div>
   					</div>
   					<div class="col-md-4 delivery-status-check btn-group" role="group">
-  						<button class="btn btn-success delivery_status" deliveryStatus="1" orderId=<%= porudct.id%> type="submit">
+  						<button class="btn btn-success delivery_status" deliveryStatus="1" orderId=<%= product.id%> type="submit">
   							Order Complete
   						</button>
   						<button class="btn btn-primary send_product_ready_email" data-toggle="modal" data-target="#sendProductReadyModal" orderId=<%= product.id%> type="submit">
