@@ -174,6 +174,29 @@ class TrxOrdersController < ApplicationController
 		end
 	end
 
+	def purchase_order
+		@order = TrxOrder.find_by(id:params[:id])
+		@pm_fee = TrxOrderFee.find_by_id(@order.trx_order_fee_id)
+		# Only the purchaser can see this information
+		if current_org_person.id == @order.bill_to_contact_id || current_org_person.org_company_id == @order.org_company_id
+			@company = !@order.org_company_id.nil? ? OrgCompany.find_by(id: @order[:org_company_id]) : nil
+			@shipAddress = ShippingAddress.find_by(trx_order_id: params[:id])
+			@purchase_items = TrxOrderItem.where(trx_order_id: @order[:id])
+			@notification_params_name = JSON.parse(@order.StripeTransaction.all[0][:notification_params])["source"]["name"]
+			@total_tax = @order.TrxOrderItem.sum(:tax_amount).to_f
+			@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
+			@contact = current_org_person
+			respond_to do |format|
+				format.html
+				format.pdf do
+					render pdf: "Invoice ##{@order.id}",
+						template: "trx_orders/purchase_order.pdf.erb"
+				end
+			end
+		else
+			redirect_to root_path, flash: {warning: "You are not authorized to view this page."}
+		end
+	end
 
 	private
 	# Reduce the quantity for the specific items bought in the db and insert the bought items 
