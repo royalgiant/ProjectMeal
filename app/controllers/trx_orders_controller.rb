@@ -377,5 +377,4 @@ class TrxOrdersController < ApplicationController
         	redirect_to edit_org_person_path(current_org_person.id), flash: {warning: "You need to be approved by the company you have been assigned to first to access the requested page."}
     	end 
     end
-
 end

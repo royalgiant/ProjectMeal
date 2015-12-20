@@ -101,6 +101,23 @@ class OrgProductsController < ApplicationController
 		redirect_to org_products_path
 	end
 
+	# Gets all the pending order requests by customers and must be completed.
+	def orders
+		@currency = Money.new(1, session[:currency]["iso_code"]).currency
+		if current_org_person.org_company_id
+			@orders = TrxOrderItem.where(org_company_id: current_org_person.org_company_id, delivery_status: 0)
+		end
+	end
+
+	# Gets all the orders that have been delivered and completed
+	def completed_orders
+		@currency = Money.new(1, session[:currency]["iso_code"]).currency
+		if current_org_person.org_company_id
+			@orders = TrxOrderItem.where(org_company_id: current_org_person.org_company_id, delivery_status: 1)
+		end
+		@total = get_total(@orders)
+	end
+
 	def vote_product
 		vote = params[:vote]
 		@product = OrgProduct.find_by_id(params[:id])
@@ -150,6 +167,15 @@ class OrgProductsController < ApplicationController
 		@tax_details["Total"] = total_tax
 		@tax_details["None"] = 0
 		return @tax_details	
+	end
+
+	# Get the total money made of a list of items
+	def get_total(array)
+		total = 0
+		array.each do |product|
+			total = total + (product.price * product.quantity)
+		end
+		return total.to_f
 	end
 
 	# strong parameters. These are the parameters we allow.

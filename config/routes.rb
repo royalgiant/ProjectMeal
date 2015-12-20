@@ -16,12 +16,14 @@ Rails.application.routes.draw do
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   
+  post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
+  get 'org_products/orders/' => 'org_products#orders', :to => "org_products_orders" 
+  get 'org_products/completed_orders/' => 'org_products#completed_orders', :to => "org_products_completed_orders"
+
   get 'org_people/stripe_settings/' => 'org_people#stripe_settings', :to => "org_people_stripe_settings"
   post 'org_people/stripe_update_settings/' => 'org_people#stripe_update_settings', :to => "org_people_stripe_update_settings"
   post 'org_people/edit_position/' => 'org_people#edit_position', :to => "org_people_edit_position"
   post 'org_people/remove_from_company/' => 'org_people#remove_from_company', :to => "org_people_remove_from_company"
-
-  post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
 
   post 'trx_orders/stripe/' => 'trx_orders#stripe', :to =>"trx_orders_stripe"
   get 'trx_orders/stripe_success/:id' => 'trx_orders#stripe_success', :to => "trx_orders_stripe_success"
@@ -38,32 +40,6 @@ Rails.application.routes.draw do
 
   post 'trx_orders/hook' => 'trx_orders#hook', :to => "trx_orders_hook"
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
 
   resources :carts
   resources :catalogues
@@ -75,32 +51,4 @@ Rails.application.routes.draw do
   root "catalogues#index"
 
   match '/org_register', to:'org_companies#new', via: 'get'
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end
