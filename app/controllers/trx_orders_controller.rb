@@ -120,7 +120,7 @@ class TrxOrdersController < ApplicationController
 				email: params["stripeEmail"],
 				trx_order_id: @order.id
 			}
-			@shipInfo = ShippingAddress.find_or_create_by!(@shipAddress)
+			@shipInfo = ShippingAddress.create!(@shipAddress)
 			@order.update(ship_to_contact_id: @shipInfo.id, trx_order_fee_id: @trx_order_fee.id) #Update the order with the new shipping address id
 		end
 

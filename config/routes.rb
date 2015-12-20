@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
 
   post 'carts/add/' => 'carts#add', :to => 'carts_add'
-  post 'carts/add_delivery_method/:id' => 'carts#add_delivery_method', :to => 'carts_add_delivery_method'
+  post 'carts/add_delivery_method' => 'carts#add_delivery_method', :to => 'carts_add_delivery_method'
 
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
