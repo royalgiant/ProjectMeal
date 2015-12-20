@@ -30,6 +30,12 @@ Rails.application.routes.draw do
   # - Stripe routes
   # - Create accounts
   post '/connect/managed' => 'stripe#managed', as: 'stripe_managed'
+  # Stripe webhooks
+  post '/hooks/stripe' => 'hooks#stripe'
+
+
+  post 'trx_orders/hook' => 'trx_orders#hook', :to => "trx_orders_hook"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -63,6 +69,7 @@ Rails.application.routes.draw do
   resources :org_companies
   resources :org_products
   resources :trx_orders
+  resources :sessions, only: [:new, :create, :destroy]
   root "catalogues#index"
 
   match '/org_register', to:'org_companies#new', via: 'get'

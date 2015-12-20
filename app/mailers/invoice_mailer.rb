@@ -10,7 +10,7 @@ class InvoiceMailer < ApplicationMailer
 	  	@contact = details[:billed_contact]
 	  	@pm_fee = details[:pm_fee]
 
-	  	mail(to: details[:billed_contact].email, subject: "ProjectMeal: Your Invoice for Purchase Order ##{detail[:order].id}") do |format|
+	  	mail(to: details[:billed_contact].email, subject: "ProjectMeal: Your Invoice for Purchase Order ##{details[:order].id}") do |format|
 	  		format.html
 	  		format.text
 	  		format.pdf do 

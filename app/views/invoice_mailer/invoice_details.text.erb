@@ -33,7 +33,7 @@ Total: <%= @currency.symbol%><%= number_with_precision(item[:price].to_f * item[
 
 Fees, Delivery Costs, and Taxes
 ==============
-MealShelf Fee: <%= @currency.symbol%><%= number_with_precision(@ps_fee.fee_amount, precision: 2)%>
+MealShelf Fee: <%= @currency.symbol%><%= number_with_precision(@pm_fee.fee_amount, precision: 2)%>
 Total Taxes: <%= @currency.symbol%><%= number_with_precision(@total_tax, precision: 2)%>
 
 Total Cost

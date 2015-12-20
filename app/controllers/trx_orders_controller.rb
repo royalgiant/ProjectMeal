@@ -56,7 +56,7 @@ class TrxOrdersController < ApplicationController
 		Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
 		@customer = Stripe::Customer.create(
-			:email => params[:stripeEmail]
+			:email => params[:stripeEmail],
 			:source => params[:stripeToken]
 		)
 		stripeTransactions = Array.new # Array used so later we can update the StripeTransactions with their TrxOrder id
@@ -96,7 +96,7 @@ class TrxOrdersController < ApplicationController
 
 		if !stripeTransactions.empty? # If our stripeTransactions array is not empty, we made some transactions
 			@orderInfo = { # Gather the following information
-				org_company_id: current_org_person.org_company_id.nil? nil : current_org_person.org_company_id,
+				org_company_id: current_org_person.org_company_id.nil? ? nil : current_org_person.org_company_id,
 				bill_to_contact_id: current_org_person.id,
 				purchased_at: Time.now,
 				total_amount: amount_total,
@@ -120,7 +120,7 @@ class TrxOrdersController < ApplicationController
 				email: params["stripeEmail"],
 				trx_order_id: @order.id
 			}
-			@shipInfo = ShippingAddress.find_or_craete_by!(@shipAddress)
+			@shipInfo = ShippingAddress.find_or_create_by!(@shipAddress)
 			@order.update(ship_to_contact_id: @shipInfo.id, trx_order_fee_id: @trx_order_fee.id) #Update the order with the new shipping address id
 		end
 
@@ -145,7 +145,7 @@ class TrxOrdersController < ApplicationController
 			@company = !@order.org_company_id.nil? ? OrgCompany.find(@order.org_company_id) : nil
 			@shipAddress = ShippingAddress.find_by(trx_order_id: params[:id])
 			@purchase_items = @order.TrxOrderItem.all
-			@notification_params_name = JSON.parse(@order.StripeTransaction.all[0][:notification_params])["card"]["name"]
+			@notification_params_name = JSON.parse(@order.StripeTransaction.all[0][:notification_params])["source"]["name"]
 			@total_tax = @order.TrxOrderItem.sum(:tax_amount).to_f
 			@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
 			@contact = current_org_person
