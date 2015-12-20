@@ -80,6 +80,76 @@ class OrgCompaniesController < ApplicationController
 		@cu_position = current_org_person.typ_position_id
 	end
 
+	def list_deliverers
+		# If search is not empty
+		if(current_org_person && @contact = OrgContact.find_by(org_person_id: current_org_person.id))
+			@country = TypCountry.find_by_id(@contact['typ_country_id'])
+			@currency = Money.new(1, @country.currency_code).currency
+			session[:currency] = @currency
+			@latitude = @contact["latitude"]
+	  		@longitude = @contact["longitude"]
+	  	else
+	  		# If the user had visited before and have geolocation saved in their cookies, use that
+	  		if !cookies[:geolocation].nil?
+		        @location = JSON.parse(cookies[:geolocation]).symbolize_keys
+		    else
+		  		# Geolocate the user by IP Address and use the default currency
+		  		@ip = request.remote_ip
+			    if Rails.env.production?
+			        @location = GeoIp.geolocation(@ip)
+			    else
+			        @location = GeoIp.geolocation("24.84.225.123")
+			    end
+			end
+			@longitude = @location[:longitude]
+	  		@latitude = @location[:latitude]
+	  		@country_code = @location[:country_code]
+	  		@country = TypCountry.find_by_iso(@country_code)
+	  		@currency = Money.new(1, @country.currency_code).currency
+	  		session[:currency] = @currency
+	  		cookies[:geolocation] = {value: JSON.generate(@location), expires: Time.now + 3600 * 24 * 7} # Set cookie for a week
+	  		# If you get an undefined data error, chances are, the internet is too slow
+	      	# Change the timeout in geocoder.rb to more than 240 secs
+	  	end
+
+	  	if params[:search]
+	  		@query = OrgContact.search(params[:search], 
+	  		where: {
+	  			location: {near: [@latitude, @longitude], within: "50km"}
+	  		}
+	  		page: params[:page], per_page: 20)
+	  		@org_contacts = @query.results # Assign results to @org_contacts
+	  	else
+	  		@query = OrgContact.search(where: {location: {near: [@latitude, @longitude], within: "50km"}, org_person_id:nil},page: params[:page], per_page:20)
+	  		@org_contacts = @query.results # Assign results to @org_contacts
+
+	  		org_contacts_ids = Array.new # Make an empty id array
+	  		@org_contacts.each do |contact_id| # Loop through the query results
+	  			if !org_contacts_ids.include? contact_id.org_company_id # If the result id isn't in org_contacts_ids array
+	  				org_contacts_ids << contact_id.org_company_id # Throw it into the array
+	  			end
+	  		end
+	  		time_s = Time.now
+	  		@org_deliverers = OrgCompany.where(id:org_contacts_ids, typ_company_id: 2) # Grab company information from the array of org_contact_ids 
+	  		@deliverers = Array.new # Make a new deliverers array that'll house both org_company and org_contact info
+	  		@org_deliverers.each do |deliverer_info| # For each deliverer
+	  			# Grab the contact info from the array results of the search
+	  			@org_contacts.each do |deliverer_contact_info|
+	  				if deliverer_contact_info.org_company_id == deliverer_info.id
+	  					region = TypRegion.find_by_id(deliverer_contact_info.typ_region_id)
+	  					country = TypCountry.find_by_id(deliverer_contact_info.typ_country_id)
+	  					@deliverers << [deliverer_info, deliverer_contact_info, region, country] # Throw into the array an array of org_company and org_contact info
+	  				end
+	  			end
+	  		end
+	  		time_e = Time.now
+	  		puts (time_e - time_s)
+	  	end
+	  	if @org_contacts.empty?
+		  	flash.now[:danger] = 'There were no deliverers within your area. Please try again'
+		end
+	end
+
 	private
 
 		# Checks if the user is signed in, if they are skip this function, if not

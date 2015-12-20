@@ -10,12 +10,15 @@ Rails.application.routes.draw do
     delete 'signout', to: 'org_people/sessions#destroy'
   end
 
-
+  get 'catalogues/index'
   post 'carts/add/' => 'carts#add', :to => 'carts_add'
   post 'carts/add_delivery_method' => 'carts#add_delivery_method', :to => 'carts_add_delivery_method'
 
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
+  get 'org_companies/list_deliverers/' => 'org_companies#list_deliverers', :to => "org_companies_list_deliverers"
+  get 'org_companies/preferred_deliverers/' => 'org_companies#preferred_deliverers', :to => "org_companies_preferred_deliverers"
+  
   
   post 'org_products/delivery_status/' => 'org_products#delivery_status', :to => "org_products_delivery_status"
   post 'org_products/send_product_ready_email/' => 'org_products#send_product_ready_email', :to => "org_products_send_product_ready_email" 
@@ -42,16 +45,16 @@ Rails.application.routes.draw do
 
 
   post 'trx_orders/hook' => 'trx_orders#hook', :to => "trx_orders_hook"
+  root "catalogues#index"
 
-
+  resources :org_products
+  resources :org_companies
+  resources :org_people  
+  resources :trx_orders
   resources :carts
   resources :catalogues
-  resources :org_people
-  resources :org_companies
-  resources :org_products
-  resources :trx_orders
   resources :sessions, only: [:new, :create, :destroy]
-  root "catalogues#index"
+
 
   match '/org_register', to:'org_companies#new', via: 'get'
 end
