@@ -156,6 +156,9 @@ class OrgProductsController < ApplicationController
 		render nothing:true
 	end
 
+	def send_product_ready_email
+	end
+
 	private
 
 	def get_tax_details

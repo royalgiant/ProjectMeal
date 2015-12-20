@@ -1,0 +1,8 @@
+<div>
+	<p>Dear <%= @contact[:first_name]+" "+@contact[:last_name] %>,</p>
+
+	<p>You made an order request for <%= pluralize(@item.quantity, @item.name)%>. The request you made is ready for pick up.</p>
+	<p>Please print or download the receipt attached and show it to the seller when you pick up your order.</p> 
+
+	<p>Thank you for using ProjectMeal</p>
+</div>
