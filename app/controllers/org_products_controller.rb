@@ -157,6 +157,25 @@ class OrgProductsController < ApplicationController
 	end
 
 	def send_product_ready_email
+		@item = TrxOrderItem.find_by_id(params[:trx_item_order_id])
+		@order = TrxOrder.find_by_id(@item[:trx_order_id])
+		@pm_fee = TrxOrderFee.find_by_id(@order.trx_order_fee_id)
+		@company = !@order.org_company_id.nil? ? OrgCompany.find(@order.org_company_id) : nil
+		@shipAddress = ShippingAddress.find_by(trx_order_id: @order[:id])
+		@purchase_items = @order.TrxOrderItem.all
+		@total_tax = @order.TrxOrderItem.sum(:tax_amount).to_f
+		@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
+		@contact = OrgPerson.find_by_id(@order[:bill_to_contact_id])
+		invoice_details_hash = {order: @order, 
+			company: @company, 
+			shipAddress: @shipAddress, 
+			purchase_items: @purchase_items,
+			currency: @currency, 
+			billed_contact: @contact,
+			total_tax: @total_tax,
+			pm_fee: @pm_fee
+		}
+		ProductReadyMailer.send_product_ready_email(invoice_details_hash, @item).deliver_now
 	end
 
 	private
