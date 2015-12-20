@@ -1,0 +1,37 @@
+<table class="table">
+	<% if !@purchases.empty?%>
+		<thead>
+			<tr>
+				<th>Order ID</th>
+		        <th>Ship To</th>
+		        <th>Purchase Date</th>
+		        <th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @purchases.each do |purchase| %>
+				<tr>
+					<td><%= link_to purchase[:id], trx_orders_purchase_order_path(id: purchase[:id]) %></td>
+					<td>
+						<span class="list_purchases_shipaddress">
+							<div><%= purchase.ship_to_contact.first_name%></div>
+            				<div><%= purchase.ship_to_contact.address1%></div>
+            				<div>
+            					<%= purchase.ship_to_contact.city%>,
+              					<%= purchase.ship_to_contact.region%>,
+              					<%= purchase.ship_to_contact.postal_code%>
+            				</div>
+            				<div>
+            					<%= purchase.ship_to_contact.country%>
+            				</div>
+						</span>
+					</td>
+					<td><%= purchase[:purchased_at].to_date.to_formatted_s(:long_ordinal)%></td>
+					<td><%= @currency.symbol%><%= number_with_precision((purchase[:total_amount]/100).to_f, precision: 2)%></td>
+				</tr>
+			<% end %>
+		</tbody>
+	<% else %>
+		<center><h4>There has been no purchases made so far.</h4></center>
+	<% end %>
+</table>
