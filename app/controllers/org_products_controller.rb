@@ -107,6 +107,7 @@ class OrgProductsController < ApplicationController
 		if current_org_person.org_company_id
 			@orders = TrxOrderItem.where(org_company_id: current_org_person.org_company_id, delivery_status: 0)
 		end
+		@total = get_total(@orders)
 	end
 
 	# Gets all the orders that have been delivered and completed
