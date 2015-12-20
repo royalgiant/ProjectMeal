@@ -3,7 +3,7 @@
 	<ul class="nav nav-sidebar">
 	    <li class="sidebar_overview"><%= link_to "Overview", edit_org_person_path(current_org_person) %></li>
 	    <% if current_org_person != nil && current_org_person.org_company_id == nil %>
-	      <li class="sidebar_personal_purchases"><%= link_to "Personal Purchase History", "#" %></li>
+	      <li class="sidebar_personal_purchases"><%= link_to "Personal Purchase History", trx_orders_list_personal_purchases_path %></li>
 	    <% end %>
 	    <!-- Only the COO, the operations chief, will be able to link his company to a bank account. -->
 	    <% if current_org_person.typ_position_id == 1%>
@@ -16,7 +16,7 @@
 	    <% if current_org_person != nil && current_org_person.org_company_id != nil %>
 	      <li class="sidebar_company_info"><%= link_to "Company Information", org_company_path(current_org_person.org_company_id) %></li>
 	      <li class="sidebar_company_people"><%= link_to "People", org_companies_people_path %></li>
-	      <li class="sidebar_purchases"><%= link_to "Company Purchase History", "#" %></li>
+	      <li class="sidebar_purchases"><%= link_to "Company Purchase History", trx_orders_list_purchases_path %></li>
 	  
 	      <% if company_typ.typ_company_id == 1 %>
 	        

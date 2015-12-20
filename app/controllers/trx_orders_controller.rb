@@ -174,6 +174,18 @@ class TrxOrdersController < ApplicationController
 		end
 	end
 
+	# For sidebar use, to list all the personal purchases made by user
+	def list_personal_purchases
+		@purchases = TrxOrder.where(bill_to_contact_id:current_org_person.id).to_a
+		@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
+	end
+
+	# For sidebar use, to list all the company purchases made by user
+	def list_purchases
+		@purchases = TrxOrder.where(org_company_id:current_org_person.org_company_id).to_a
+		@currency = Money.new(1, session[:currency]['iso_code']).currency # Gives us the currency symbol to display in the view
+	end
+
 	def purchase_order
 		@order = TrxOrder.find_by(id:params[:id])
 		@pm_fee = TrxOrderFee.find_by_id(@order.trx_order_fee_id)

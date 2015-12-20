@@ -1,0 +1,11 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+<div class="col-md-10 col-md-offset-2 main">
+	<% provide(:title, "Past Purchases") %>
+	<center><h1>Company's Past Purchases</h1></center>
+	<%= render 'shared/error_messages' %>
+	<div class="col-md-12 "> 
+    	<%= render :partial => "layouts/purchases" %>
+  	</div> 
+</div>

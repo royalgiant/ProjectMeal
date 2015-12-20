@@ -25,6 +25,8 @@ Rails.application.routes.draw do
 
   post 'trx_orders/stripe/' => 'trx_orders#stripe', :to =>"trx_orders_stripe"
   get 'trx_orders/stripe_success/:id' => 'trx_orders#stripe_success', :to => "trx_orders_stripe_success"
+  get 'trx_orders/list_purchases/' => 'trx_orders#list_purchases', :to => "trx_orders_list_purchases"
+  get 'trx_orders/list_personal_purchases/' => 'trx_orders#list_personal_purchases', :to => "trx_orders_list_personal_purchases"
   get 'trx_orders/purchase_order/' => 'trx_orders#purchase_order', :to => "trx_orders_purchase_order"
 
   # - Stripe routes
