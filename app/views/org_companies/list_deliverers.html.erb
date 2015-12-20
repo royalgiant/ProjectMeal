@@ -1,0 +1,54 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %> 
+
+<div class="col-md-6 col-md-push-4 form-margins">
+	<%= provide(:title, "Search") %>
+	<center><h1>Search For Deliverers</h1></center>
+		<%= form_tag org_companies_list_deliverers_path, :class => "input-group", :method => :get do %>
+			<%= text_field_tag :search, params[:search], :class => "form-control" %>
+			<span class="input-group-btn">
+				<%= submit_tag "Search", :name => nil, :class => "btn btn-default" %>
+			</span>		
+		<% end %>	
+</div>
+
+<div class="col-md-10 col-md-offset-2 main">
+<% if @deliverers.empty? %>
+<% else %>
+	<%= will_paginate @query, renderer: BootstrapPagination::Rails %>
+	<ul class="catalogue">
+		<% @deliverers.each do |deliverer| %>
+		<li>
+			<div class="row">
+				<div class="col-md-9" id="delivererInfo">
+					<h4 id="title"><%= deliverer[0].name.to_s %></h4>
+					<span><%= hidden_field_tag 'id', deliverer[0].id.to_i%></span>
+					<span><%= deliverer[1].address1.to_s%></span>
+					<span><%= deliverer[1].city.to_s%>, <%= deliverer[2].name%>, <%= deliverer[1].postal_code%></span>
+					<span><%= deliverer[3].country%></span>
+				</div>
+				<div class="col-sm-3 deliverer-box">
+					<%= button_to "Add to Preferred Deliverer", {action: "ajax_add_deliverers", method: "post", deliverer_id: deliverer[0].id}, {class: "btn btn-success addedDeliverer", data: {toggle: "modal", target: "#addedDeliverer-modal#{deliverer[0].id.to_i}", type: "json"}, type: "submit", remote: true}%>
+					<!-- Modal -->
+		            <div class="modal fade addDeliverModal" id="addedDeliverer-modal<%= deliverer[0].id.to_i%>" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		              <div class="modal-dialog">
+		                <div class="modal-content">
+		                  <div class="modal-header">
+		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                    <h4 class="modal-title-success">Success!</h4>
+		                    <h4 class="modal-title-error">We've encountered a problem...</h4>
+		                  </div>
+		                  <div class="modal-body">
+		                    <p id="modal-message-success">You've added <%= deliverer[0].name%> to your preferred deliverers!</p>
+		                    <p id="modal-message-error">There was an error adding <%= deliverer[0].name%> to your preferred deliverers! Please try again.</p>
+		                  </div>  
+		              </div>
+		            </div>
+				</div>
+			</div>
+		</li>
+		<% end %>
+	</ul>
+	<%= will_paginate @query, renderer: BootstrapPagination::Rails %>
+<% end %>

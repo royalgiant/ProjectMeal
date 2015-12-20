@@ -14,7 +14,7 @@ class OrgContact < ActiveRecord::Base
 	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
 	validates :business_number, presence: true, numericality: true, length: {minimum: 10, maximum: 15}
 	validates :cell_number, numericality: true, length: {minimum: 10, maximum: 15}, allow_blank: true
-
+	searchkick locations: ["location"]
 	mount_uploader :avatar, AvatarUploader
 
 	geocoded_by :address
@@ -23,6 +23,10 @@ class OrgContact < ActiveRecord::Base
 	# Whenever any of the 3 fields below change, then we re-geocode
 	def address
 		[city, postal_code, address1].compact.join(', ')
+	end
+
+	def search_data
+	    attributes.merge location: {lat: latitude, lon: longitude}
 	end
 
 end

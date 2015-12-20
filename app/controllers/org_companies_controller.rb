@@ -116,7 +116,7 @@ class OrgCompaniesController < ApplicationController
 	  		@query = OrgContact.search(params[:search], 
 	  		where: {
 	  			location: {near: [@latitude, @longitude], within: "50km"}
-	  		}
+	  		},
 	  		page: params[:page], per_page: 20)
 	  		@org_contacts = @query.results # Assign results to @org_contacts
 	  	else
