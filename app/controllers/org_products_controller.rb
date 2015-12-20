@@ -151,6 +151,11 @@ class OrgProductsController < ApplicationController
 		true
 	end
 
+	def delivery_status
+		TrxOrderItem.update(params[:trx_item_order_id], delivery_status: params[:delivery_status])
+		render nothing:true
+	end
+
 	private
 
 	def get_tax_details

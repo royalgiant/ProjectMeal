@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'org_companies/:id/company_profile' => 'org_companies#company_profile', :as => 'org_companies_company_profile'
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   
+  post 'org_products/delivery_status/' => 'org_products#delivery_status', :to => "org_products_delivery_status"
   post 'org_products/vote_product/' => 'org_products#vote_product', :to => "org_products_vote_product"
   get 'org_products/orders/' => 'org_products#orders', :to => "org_products_orders" 
   get 'org_products/completed_orders/' => 'org_products#completed_orders', :to => "org_products_completed_orders"
