@@ -165,7 +165,7 @@ class OrgCompaniesController < ApplicationController
 	# A button that removes a preferred deliverer from list of preferred deliverers
 	def remove_preferred_deliverers
 		pd = PreferredDeliverer.find_by(deliverer_id: params[:deliverer_id], supplier_id: current_org_person.org_company_id.to_i)
-		pd.destroy
+		pd.delete
 		@preferred_deliverers = get_preferred_deliverers
 		respond_to do |format|
 			format.js
