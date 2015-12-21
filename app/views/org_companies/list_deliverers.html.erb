@@ -4,18 +4,12 @@
 
 <div class="col-md-6 col-md-push-4 form-margins">
 	<%= provide(:title, "Search") %>
-	<center><h1>Search For Deliverers</h1></center>
-		<%= form_tag org_companies_list_deliverers_path, :class => "input-group", :method => :get do %>
-			<%= text_field_tag :search, params[:search], :class => "form-control" %>
-			<span class="input-group-btn">
-				<%= submit_tag "Search", :name => nil, :class => "btn btn-default" %>
-			</span>		
-		<% end %>	
+	<center><h1>Available Deliverers In Your Area</h1></center>		
 </div>
 
 <div class="col-md-10 col-md-offset-2 main">
-<% if @deliverers.empty? %>
-<% else %>
+
+<% if !@deliverers.empty? %>
 	<%= will_paginate @query, renderer: BootstrapPagination::Rails %>
 	<ul class="catalogue">
 		<% @deliverers.each do |deliverer| %>

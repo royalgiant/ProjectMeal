@@ -112,39 +112,31 @@ class OrgCompaniesController < ApplicationController
 	      	# Change the timeout in geocoder.rb to more than 240 secs
 	  	end
 
-	  	if params[:search]
-	  		@query = OrgContact.search(params[:search], 
-	  		where: {
-	  			location: {near: [@latitude, @longitude], within: "50km"}
-	  		},
-	  		page: params[:page], per_page: 20)
-	  		@org_contacts = @query.results # Assign results to @org_contacts
-	  	else
-	  		@query = OrgContact.search(where: {location: {near: [@latitude, @longitude], within: "50km"}, org_person_id:nil},page: params[:page], per_page:20)
-	  		@org_contacts = @query.results # Assign results to @org_contacts
+  		@query = OrgContact.search(where: {location: {near: [@latitude, @longitude], within: "50km"}, org_person_id:nil},page: params[:page], per_page:20)
+  		@org_contacts = @query.results # Assign results to @org_contacts
 
-	  		org_contacts_ids = Array.new # Make an empty id array
-	  		@org_contacts.each do |contact_id| # Loop through the query results
-	  			if !org_contacts_ids.include? contact_id.org_company_id # If the result id isn't in org_contacts_ids array
-	  				org_contacts_ids << contact_id.org_company_id # Throw it into the array
-	  			end
-	  		end
-	  		time_s = Time.now
-	  		@org_deliverers = OrgCompany.where(id:org_contacts_ids, typ_company_id: 2) # Grab company information from the array of org_contact_ids 
-	  		@deliverers = Array.new # Make a new deliverers array that'll house both org_company and org_contact info
-	  		@org_deliverers.each do |deliverer_info| # For each deliverer
-	  			# Grab the contact info from the array results of the search
-	  			@org_contacts.each do |deliverer_contact_info|
-	  				if deliverer_contact_info.org_company_id == deliverer_info.id
-	  					region = TypRegion.find_by_id(deliverer_contact_info.typ_region_id)
-	  					country = TypCountry.find_by_id(deliverer_contact_info.typ_country_id)
-	  					@deliverers << [deliverer_info, deliverer_contact_info, region, country] # Throw into the array an array of org_company and org_contact info
-	  				end
-	  			end
-	  		end
-	  		time_e = Time.now
-	  		puts (time_e - time_s)
-	  	end
+  		org_contacts_ids = Array.new # Make an empty id array
+  		@org_contacts.each do |contact_id| # Loop through the query results
+  			if !org_contacts_ids.include? contact_id.org_company_id # If the result id isn't in org_contacts_ids array
+  				org_contacts_ids << contact_id.org_company_id # Throw it into the array
+  			end
+  		end
+  		time_s = Time.now
+  		@org_deliverers = OrgCompany.where(id:org_contacts_ids, typ_company_id: 2) # Grab company information from the array of org_contact_ids 
+  		@deliverers = Array.new # Make a new deliverers array that'll house both org_company and org_contact info
+  		@org_deliverers.each do |deliverer_info| # For each deliverer
+  			# Grab the contact info from the array results of the search
+  			@org_contacts.each do |deliverer_contact_info|
+  				if deliverer_contact_info.org_company_id == deliverer_info.id
+  					region = TypRegion.find_by_id(deliverer_contact_info.typ_region_id)
+  					country = TypCountry.find_by_id(deliverer_contact_info.typ_country_id)
+  					@deliverers << [deliverer_info, deliverer_contact_info, region, country] # Throw into the array an array of org_company and org_contact info
+  				end
+  			end
+  		end
+  		time_e = Time.now
+  		puts (time_e - time_s)
+	  	
 	  	if @org_contacts.empty?
 		  	flash.now[:danger] = 'There were no deliverers within your area. Please try again'
 		end
@@ -161,7 +153,36 @@ class OrgCompaniesController < ApplicationController
 		end
 	end
 
+	# For the list of preferred deliverers in a profile
+	def preferred_deliverers
+		# Get all the deliverer_ids that are connected to this supplier
+		s_time = Time.now
+		@preferred_deliverers = get_preferred_deliverers
+		e_time = Time.now
+		puts (e_time - s_time)
+	end
+
 	private
+		# Common function to get PreferredDeliverer information for company 
+		# Used in preferred_deliverers and remove_preferred_deliverers
+		def get_preferred_deliverers
+			@deliverers = PreferredDeliverer.where(supplier_id: current_org_person.org_company_id.to_i).pluck(:deliverer_id)
+			@deliverers_info = OrgCompany.where(id: @deliverers) # Find contact info of all the deliverers
+			@deliverers_contact = OrgContact.where(org_company_id: @deliverers, org_person_id: nil)
+			@preferred_deliverers = Array.new # Make a new deliverers array that'll house both org_company and org_contact info
+			@deliverer_info.each do |deliverer_info|
+				# Grab the contact info from the array results of the DB results
+				@deliverers_contact.each do |deliverer_contact_info|
+					if deliverer_contact_info.org_company_id == deliverer_info.id
+						region = TypRegion.find_by_id(deliverer_contact_info.typ_region_id)
+		  				country = TypCountry.find_by_id(deliverer_contact_info.typ_country_id)
+		  				@preferred_deliverers << [deliverer_info, deliverer_contact_info, region, country] # Throw into the array an array of org_company and org_contact info
+					end
+				end
+			end
+			return @preferred_deliverers
+		end
+
 
 		# Checks if the user is signed in, if they are skip this function, if not
 		# redirect him to sign in page and save the last page they were on so
