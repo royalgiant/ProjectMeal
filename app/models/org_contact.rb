@@ -26,7 +26,7 @@ class OrgContact < ActiveRecord::Base
 	end
 
 	def search_data
-	    attributes.merge location: {lat: latitude, lon: longitude}
+	    attributes.merge location: [latitude, longitude]
 	end
 
 end

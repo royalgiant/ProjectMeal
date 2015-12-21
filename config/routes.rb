@@ -18,7 +18,8 @@ Rails.application.routes.draw do
   get 'org_companies/people/' => 'org_companies#people', :to => "org_companies_people"
   get 'org_companies/list_deliverers/' => 'org_companies#list_deliverers', :to => "org_companies_list_deliverers"
   get 'org_companies/preferred_deliverers/' => 'org_companies#preferred_deliverers', :to => "org_companies_preferred_deliverers"
-  
+  post 'org_companies/ajax_add_deliverers/' => 'org_companies#ajax_add_deliverers', :to => "org_companies_ajax_add_deliverers"
+  post 'org_companies/remove_preferred_deliverers/' => 'org_companies#remove_preferred_deliverers', :to => "org_companies_remove_preferred_deliverers"
   
   post 'org_products/delivery_status/' => 'org_products#delivery_status', :to => "org_products_delivery_status"
   post 'org_products/send_product_ready_email/' => 'org_products#send_product_ready_email', :to => "org_products_send_product_ready_email" 
