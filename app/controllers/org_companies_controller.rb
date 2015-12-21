@@ -150,6 +150,17 @@ class OrgCompaniesController < ApplicationController
 		end
 	end
 
+	# Called from list_deliverers as a asynchronous way to add deliverers to a company's preferred deliverers.
+	def ajax_add_deliverers
+		# Find the record if it exists, else create it.
+		@deliverer = PreferredDeliverer.find_or_create_by(deliverer_id: params[:deliverer_id].to_i, supplier_id: current_org_person.org_company_id.to_i)
+		if @deliverer.save # Try saving it...
+			render json: @deliverer # Return a json object of @deliverer
+		else # else there was an error and return the json error messages
+			render json: {errors: @deliverer.errors.full_messages}
+		end
+	end
+
 	private
 
 		# Checks if the user is signed in, if they are skip this function, if not
