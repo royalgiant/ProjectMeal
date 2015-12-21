@@ -183,17 +183,6 @@ class OrgCompaniesController < ApplicationController
 			return @preferred_deliverers
 		end
 
-
-		# Checks if the user is signed in, if they are skip this function, if not
-		# redirect him to sign in page and save the last page they were on so
-		# we can redirect him back to that page when he signs in.
-		def signed_in_user
-			unless signed_in?
-				store_location
-				redirect_to signin_url, flash: {warning: "Please sign in."}
-			end
-		end
-
 		# strong parameters. These are the parameters we allow.
 		def company_register_params
 			params.require(:org_company).permit(:name, :avatar, :description, :typ_fee_id, {typ_companies: :id}, org_contacts_attributes: [:address1, :address2,
@@ -218,6 +207,16 @@ class OrgCompaniesController < ApplicationController
 		    return hash
 		end
 
+		# Checks if the user is signed in, if they are skip this function, if not
+		# redirect him to sign in page and save the last page they were on so
+		# we can redirect him back to that page when he signs in.
+		def signed_in_user
+			unless signed_in?
+				store_location
+				redirect_to signin_url, flash: {warning: "Please sign in."}
+			end
+		end
+
 		 # To see orders, products, company, the person should have a role in the company
 	    def user_has_role_in_company?
 	    	if current_org_person.typ_position_id.blank?
@@ -235,5 +234,4 @@ class OrgCompaniesController < ApplicationController
 	    		redirect_to edit_org_person_path(current_org_person.id), flash: {warning: "Access is restricted for your role."}
 	    	end
 	    end
-
 end

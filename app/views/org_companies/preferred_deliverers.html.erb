@@ -1,0 +1,10 @@
+<% content_for(:sidebar) do %>
+    <%= render :partial => "layouts/sidebar" %>
+<% end %>
+<div class="col-md-10 col-md-offset-2 main">
+  <% provide(:title, "Preferred Deliverers") %>
+  <center><h1>Your Preferred Deliverers</h1></center>
+  <div id="preferred_deliverers">
+  	<%= render partial: "layouts/preferreddeliverers", locals: {preferred_deliverers: @preferred_deliverers}%>
+  </div>
+ </div>

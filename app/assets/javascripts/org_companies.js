@@ -8,6 +8,16 @@ jQuery(function() {
     return $('li.sidebar_company_people').addClass('active');
   });
 
+  $('div#preferred_deliverers').on("click", 'input.removeDeliverer', (e) ->
+    e.preventDefault()
+    $form = $(this).closest('form')
+    $deliverer_id = $(this).attr("data-deliverer-id") 
+    $form.siblings("div.removeDeliverModal").find('button#delete').on("click", (e) ->
+      $form.trigger "submit"
+    )
+    return
+  )
+
   $('#roster').change(function() {
     var org_person_id, position;
     position = $('#roster :selected').val();

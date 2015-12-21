@@ -1,0 +1,39 @@
+<% if @preferred_deliverers.count > 0 %>
+	<ul class="pref_deliverers">
+		<% @preferred_deliverers.each do |deliverer| %>
+		<li>
+			<div class="col-md-9">
+				<div><b><%= deliverer[0].name.to_s %></b></div>
+				<div><%= hidden_field_tag 'id', deliverer[0].id.to_i%></div>
+				<div><%= deliverer[1].address1.to_s%></div>
+				<div><%= deliverer[1].city.to_s%>, <%= deliverer[2].name%>, <%= deliverer[1].postal_code%></div>
+				<div><%= deliverer[3].country%></div>
+			</div>
+
+			<div class="col-sm-3 deliverer-box">
+				<%= button_to "Remove Deliverer", {action: "remove_preferred_deliverers", method: "post", deliverer_id: deliverer[0].id}, {class: "btn btn-danger removeDeliverer", data: {toggle: "modal", target: "#removeDeliverer-modal#{deliverer[0].id.to_i}", deliverer_id: deliverer[0].id, type: "json"}, type: "submit", remote: true}%>
+				<!-- Modal -->
+		        <div class="modal fade removeDeliverModal" id="removeDeliverer-modal<%= deliverer[0].id.to_i%>" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		            <div class="modal-dialog">
+		              <div class="modal-content">
+		                <div class="modal-header">
+		                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                  <h5>Remove <%= deliverer[0].name%> from your Preferred Deliverers</h5>
+		                </div>
+		                <div class="modal-body">
+		                  Are you sure?
+		                </div>
+		                <div class="modal-footer">
+		                  <button type="button" data-dismiss="modal" class="btn btn-primary" id="delete">Remove</button>
+		                  <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+		                </div>  
+		            </div>
+		          </div>
+				</div>
+			</div>
+		</li>
+		<% end %>
+	</ul>
+<% else %>
+	<center><h4>You have no preferred deliverers</h4></center> 
+<% end %>
