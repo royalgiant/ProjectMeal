@@ -162,6 +162,16 @@ class OrgCompaniesController < ApplicationController
 		puts (e_time - s_time)
 	end
 
+	# A button that removes a preferred deliverer from list of preferred deliverers
+	def remove_preferred_deliverers
+		pd = PreferredDeliverer.find_by(deliverer_id: params[:deliverer_id], supplier_id: current_org_person.org_company_id.to_i)
+		pd.destroy
+		@preferred_deliverers = get_preferred_deliverers
+		respond_to do |format|
+			format.js
+		end
+	end
+
 	private
 		# Common function to get PreferredDeliverer information for company 
 		# Used in preferred_deliverers and remove_preferred_deliverers
@@ -170,7 +180,7 @@ class OrgCompaniesController < ApplicationController
 			@deliverers_info = OrgCompany.where(id: @deliverers) # Find contact info of all the deliverers
 			@deliverers_contact = OrgContact.where(org_company_id: @deliverers, org_person_id: nil)
 			@preferred_deliverers = Array.new # Make a new deliverers array that'll house both org_company and org_contact info
-			@deliverer_info.each do |deliverer_info|
+			@deliverers_info.each do |deliverer_info|
 				# Grab the contact info from the array results of the DB results
 				@deliverers_contact.each do |deliverer_contact_info|
 					if deliverer_contact_info.org_company_id == deliverer_info.id

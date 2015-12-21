@@ -1,5 +1,19 @@
 jQuery(function() {
 
+  // When the ajax was a sucess 
+  // For list_deliverers.html.erb
+  $("div.deliverer-box form.button_to").on("ajax:success", function(e, data, status, xhr) {
+    $("div.modal-header h4.modal-title-success").show();
+    $("div.modal-body p#modal-message-success").show();
+    $("div.modal-header h4.modal-title-error").hide();
+    return $("div.modal-body p#modal-message-error").hide();
+    }).on("ajax:error", function(e, xhr, status, error) {
+      $("div.modal-header h4.modal-title-success").hide();
+      $("div.modal-body p#modal-message-success").hide();
+      $("div.modal-header h4.modal-title-error").show();
+      return $("div.modal-body p#modal-message-error").show();
+    });
+
   $('.org_companies.show, .org_companies.edit').ready(function() {
     return $('li.sidebar_company_info').addClass('active');
   });
