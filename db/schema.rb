@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151205231736) do
+ActiveRecord::Schema.define(version: 20151213213559) do
 
   create_table "carts", force: :cascade do |t|
     t.integer  "org_person_id",   limit: 4
@@ -143,6 +143,20 @@ ActiveRecord::Schema.define(version: 20151205231736) do
     t.integer  "trx_order_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "stripe_transactions", force: :cascade do |t|
+    t.integer  "trx_order_id",        limit: 4
+    t.string   "txn_type",            limit: 255
+    t.string   "currency",            limit: 255
+    t.decimal  "total_amount",                      precision: 20, scale: 4
+    t.decimal  "tax_amount",                        precision: 20, scale: 4
+    t.text     "notification_params", limit: 65535
+    t.string   "txn_id",              limit: 255
+    t.string   "status",              limit: 255
+    t.string   "description",         limit: 255
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
   end
 
   create_table "trx_order_fees", force: :cascade do |t|
